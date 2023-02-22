@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const schema = mongoose.Schema(
   {
     post_id: String,
+    comment_id: String,
     user_id: String,
     email: String,
     username: String
@@ -12,4 +13,4 @@ const schema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("PostsModel", schema);
+module.exports = mongoose.model("LikesModel", schema);
