@@ -1,9 +1,9 @@
 const Repository = require("../../../Repository");
-const commentsModels = require("../models/comments.models");
+const Comment = require("../models/comments.models");
 
 class CommentsRepository extends Repository {
     constructor() {
-        super(commentsModels);
+        super(Comment);
     };
 }
 
