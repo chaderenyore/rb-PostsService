@@ -11,7 +11,7 @@ const schema = mongoose.Schema(
     post_image:{type: String},
     post_video: {type: String},
     total_likes: {type: Number, default: 0},
-    total_comments: {type: String, default: 0},
+    total_comments: {type: Number, default: 0},
     total_reposted_times: {type: Number, default: 0},
     total_tweets: {type: Number},
     is_sponsored: {type: Boolean, default: false},
