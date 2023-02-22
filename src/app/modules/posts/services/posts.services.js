@@ -1,38 +1,43 @@
 const PostsRepository = require("../repository/posts.repository");
-// const { message } = require("../../../../_constants/service.message");
 
 class PostsService {
   constructor() {
     this.PostsRepository = PostsRepository;
   }
   
-  async createRecord(data) {
+  create(data) {
     return this.PostsRepository.create(data)
   }
 
-  async findARecord(query) {
+  findARecord(query) {
     this.PostsRepository.findOne(query);
   }
 
-  async updateARecord(condition, update) {
+  update(condition, update) {
     this.PostsRepository.update(condition, update)
   }
 
-  async GetAllRecords(limit, page, data, selectedFields) {
+  getAll(limit, page, data, selectedFields) {
    this.PostsRepository.all(limit, page, data, selectedFields)
 
   }
 
-  async findRecordById(id) {
+  findById(id) {
     this.PostsRepository.findById(id)
   }
 
-  async deletAll() {
+  deletAll() {
     this.PostsRepository.delete({})
   }
 
-  async deletOne (condition) {
+  deletOne (condition) {
     this.PostsRepository.delete(condition)
+  }
+  updateMany(condition, update) {
+    return this.Model.updateMany(condition, update, {
+      new: true,
+      lean: true,
+    });
   }
 }
 

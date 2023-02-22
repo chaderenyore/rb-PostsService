@@ -1,5 +1,4 @@
 const CommentsRepository = require("../repository/comments.repository");
-// const { message } = require("../../../../_constants/service.message");
 
 class CommentsService {
   constructor() {
