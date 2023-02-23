@@ -5,11 +5,11 @@ class CommentsService {
     this.CommentsRepository = CommentsRepository;
   }
   
-  async createRecord(data) {
+  async createComment(data) {
     return this.CommentsRepository.create(data)
   }
 
-  async findARecord(query) {
+  async findAComment(query) {
     this.CommentsRepository.findOne(query);
   }
 
