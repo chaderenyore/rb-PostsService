@@ -9,21 +9,21 @@ class PostsService {
     return this.PostsRepository.create(data)
   }
 
-  findARecord(query) {
-    this.PostsRepository.findOne(query);
+  findAPost(query) {
+    return this.PostsRepository.findOne(query);
   }
 
   update(condition, update) {
-    this.PostsRepository.update(condition, update)
+    return this.PostsRepository.update(condition, update)
   }
 
   getAll(limit, page, data, selectedFields) {
-   this.PostsRepository.all(limit, page, data, selectedFields)
+   return this.PostsRepository.all(limit, page, data, selectedFields)
 
   }
 
   findById(id) {
-    this.PostsRepository.findById(id)
+    return this.PostsRepository.findById(id)
   }
 
   deletAll() {
