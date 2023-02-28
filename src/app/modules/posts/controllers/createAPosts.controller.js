@@ -5,8 +5,10 @@ const { createResponse } = require("../../../../_helpers/createResponse");
 const PostService = require("../services/posts.services");
 const CommunityPostService = require("../services/communityPosts.services");
 const logger = require("../../../../../logger.conf");
-const { bannedWords } = require("../../../../_helpers/BannedWords")
+const { bannedWords } = require("../../../../_helpers/BannedWords");
 const KEYS = require("../../../../_config/keys");
+
+
 exports.createPost = async (req, res, next) => {
   try {
     //  filter banned words from title and text
@@ -58,20 +60,34 @@ exports.createPost = async (req, res, next) => {
     // create post record
     const newPost = await new PostService().create(dataToPostModel);
     if(newPost){
+      console.log("NEWPOST ================== ", newPost);
       const dataToCommunityPostModel = {
         poster_id: req.user.user_id,
         original_post_id: newPost._id,
         poster_fullname: fullname,
         poster_username: user.data.data.username ? user.data.data.username : "",
+        post_type: "original",
         ...req.body
       }
       // create community post
      const communityPost = await new CommunityPostService().create(dataToCommunityPostModel);
-     console.log("Community Post ======= ", communityPost)
+     console.log("Community Post ======= ", communityPost);
     }
     console.log("New Post : ========= : ", newPost);
     return createResponse("Post Created", newPost)(res, HTTP.OK);
-    }
+      } else {
+        return next(
+          createError(HTTP.BAD_REQUEST, [
+            {
+              status: RESPONSE.ERROR,
+              message: "Unable To Create Post, Try Again",
+              statusCode: HTTP.BAD_REQUEST,
+              data: null,
+              code: HTTP.BAD_REQUEST,
+            },
+          ])
+        );
+      }
     }
   } catch (err) {
     console.log(err);

@@ -9,7 +9,7 @@ const Comments = require("./modules/comments/routes/comments.routes");
 module.exports = () => {
   
   const router = Router();
-
+  
   // router.use("/posts", Posts);
   router.use("/comments",  Comments);
   // router.use("/likes",  Likes);

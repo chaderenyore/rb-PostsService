@@ -82,7 +82,6 @@ exports.sortPosts = async (req, res, next) => {
         ])
       );
     } else {
-        // filter visible and banned posts TODO
       return createResponse(`Posts Sorted`, posts)(res, HTTP.OK);
     }
   } catch (err) {
