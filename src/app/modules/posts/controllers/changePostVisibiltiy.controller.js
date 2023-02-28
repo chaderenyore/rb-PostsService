@@ -40,24 +40,24 @@ exports.changeVisibility = async (req, res, next) => {
       // update Posts in community, posts, blocked, tweets, reposts
   const updatedCommunityPost = await new CommunityPostsService().update(
     { original_post_id: req.body.post_id, poster_id: req.user.user_id },
-    { original_post_isVisible: false }
+    { original_post_isVisible: visibilityState }
   );
   const updatedRePost = await new RePostsService().update(
     { post_id: req.body.post_id, poster_id: req.user.user_id },
-    { original_post_isVisible: false }
+    { original_post_isVisible: visibilityState }
   );
   const updatedTweetsPost = await new TweetPostsService().update(
     { post_id: req.body.post_id, poster_id: req.user.user_id },
-    { original_post_isVisible: false }
+    { original_post_isVisible: visibilityState }
   );
 
   const updatedBlockedPost = await new BlockedPostsService().update(
     { post_id: req.body.post_id, poster_id: req.user.user_id },
-    { original_post_isVisible: false }
+    { original_post_isVisible: visibilityState }
   );
  const updatedbasePost = await new PostsService().update(
             { post_id: req.user.user_id, post_id: req.query.post_id },
-            { is_visible: false }
+            { is_visible: visibilityState }
           );
           return createResponse(resmessage, updatedbasePost)(
             res,

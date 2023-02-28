@@ -49,7 +49,7 @@ const updatedRePost = await new RePostsService().update(
   );
  const
     }
-        return createResponse(`Post Updated`, updatedPost)(res, HTTP.OK);
+        return createResponse(`Post Deleted`, {})(res, HTTP.OK);
       }
     }
    catch (err) {

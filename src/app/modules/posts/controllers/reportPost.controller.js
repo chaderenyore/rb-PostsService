@@ -7,6 +7,8 @@ const CommunityPostsService = require("../services/communityPosts.services");
 const RePostsService = require("../services/repost.services");
 const TweetPostsService = require("../services/tweets.services");
 const BlockedPostsService = require("../services/blockedPosts.services");
+const ReportedPostsService = require("../services/reportedPosts.services");
+
 const logger = require("../../../../../logger.conf");
 
 exports.reportAPost = async (req, res, next) => {
@@ -42,9 +44,9 @@ exports.reportAPost = async (req, res, next) => {
     { post_id: req.body.post_id, poster_id: req.user.user_id},
     { original_is_reported: true}
   );
-  const updatedBlockedPost = await new BlockedPostsService().update(
-    { post_id: req.body.post_id, poster_id: req.user.user_id},
-    { original_is_reported: true}
+//   save reported posts
+  const redportedPost = await new ReportedPostsService().create(
+    { post_id: req.body.post_id, reporter_id: req.user.user_id, report_narration: req.body.report_narration },
   );
         return createResponse(`You Reported A Post}`,  reportedPost)(res, HTTP.OK);
       }
