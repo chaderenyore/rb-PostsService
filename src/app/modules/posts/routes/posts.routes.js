@@ -128,7 +128,7 @@ router.put(
   );
 
   router.post(
-    "/tweet-post",
+    "/post-media",
     authorize(['user','org']),
     validateRequest(UploadPostMedia.uploadPostMediaBodySchema, "body"),
     validateRequest(UploadPostMedia.uploadPostMediaQuerySchema, "query"),
