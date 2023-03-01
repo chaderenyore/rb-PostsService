@@ -11,6 +11,7 @@ const schema = mongoose.Schema(
     commenter_username: {type: String},
     comment_body_text: {type: String},
     total_likes: {type: String},
+    post_type: {type: String, enum :['comment']},
     imageUrl: {type: String}
   },
   {
