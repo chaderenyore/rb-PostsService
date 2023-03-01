@@ -4,10 +4,7 @@ const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const PostsService = require("../services/posts.services");
 const CommunityPostsService = require("../services/communityPosts.services");
-const TweetsService = require("../services/tweets.services");
-const RepostService = require("../services/reposts.services");
 const BlockedPostsService = require("../services/blockedPost.services");
-
 
 const logger = require("../../../../../logger.conf");
 
@@ -35,7 +32,7 @@ exports.getAllCommunityPostPosts = async (req, res, next) => {
     // get users blocked posts ids
     const usersBlockedPosts = await new BlockedPostsService().find({blocker_id: req.user.user_id})
     for(let ids; ids < usersBlockedPosts.length; ids++){
-      usersBlockedPostsIds.push(usersBlockedPosts.post_id)
+      usersBlockedPostsIds.push(usersBlockedPosts.post_id[ids])
     }
   //  loop through data and find the one that has children
   for(let post; post < posts.data.length; post++){
@@ -44,9 +41,9 @@ exports.getAllCommunityPostPosts = async (req, res, next) => {
     }
     if(post.data[post].post_type === "tweet" || post.data[post].post_type === "repost"  || post.data[post].post_type === "shared"){
       // find origianl post
-      const originalPost = await new PostsService().findAPost({post.data[post].original_post_id});
+      const originalPost = await new PostsService().findAPost({_id: post.data[post].original_post_id});
       if(originalPost && originalPost.is_visible === false){
-      post.data[post].originalPost = "original Post Visibility off";
+      post.data[post].originalPost = "Original Post Visibility off";
       allPosts.push(post.data[post]);
       } else{
         post.data[post].originalPost = originalPost;

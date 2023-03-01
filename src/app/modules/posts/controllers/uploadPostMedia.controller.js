@@ -26,18 +26,18 @@ exports.updatePostMedia = async (req, res, next) => {
   let media;
   if(req.query.type === "video"){
     dataToUpdate = {
-      { post_video: req.file?.location }
+       post_video: req.file?.location 
     };
     media = {
-      { post_video: req.file?.location } 
+      post_video: req.file?.location
     };
   }
   if(req.query.type === "image"){
     dataToUpdate = {
-      { post_image: req.file?.location }
+       post_image: req.file?.location
     };
     media = {
-      { post_image: req.file?.location } ;
+       post_image: req.file?.location 
     }
   }
   // update post and community posts
@@ -53,9 +53,10 @@ exports.updatePostMedia = async (req, res, next) => {
       res,
       HTTP.OK
     );
-  } catch (err) {
-    }
- 
+  } 
+  
+}
+catch (err) {
     logger.error(err);
     return next(createError.InternalServerError(err));
   }

@@ -41,4 +41,4 @@ class BannedPostsService {
   }
 }
 
-module.exports = BlockedPostsService;
+module.exports = BannedPostsService;

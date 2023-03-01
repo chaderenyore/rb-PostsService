@@ -6,8 +6,8 @@ const PostsService = require("../services/posts.services");
 const CommunityPostsService = require("../services/communityPosts.services");
 const RePostsService = require("../services/repost.services");
 const TweetPostsService = require("../services/tweets.services");
-const BlockedPostsService = require("../services/blockedPosts.services");
-const ReportedPostsService = require("../services/blockedPosts.services");
+const BlockedPostsService = require("../services/blockedPost.services");
+const ReportedPostsService = require("../services/reportedPosts.services");
 const logger = require("../../../../../logger.conf");
 
 exports.blockAPost = async (req, res, next) => {
@@ -30,7 +30,7 @@ exports.blockAPost = async (req, res, next) => {
         );
         } else {
 // search if posts is already blocked by user
-const isBlocked = new await BlockedPostsService().findAPost({blocker_id: req.user.user_id, post_id:req.body.post_id});
+const isBlocked = await new BlockedPostsService().findAPost({blocker_id: req.user.user_id, post_id:req.query.post_id});
 if(isBlocked){
     return next(
         createError(HTTP.OK, [

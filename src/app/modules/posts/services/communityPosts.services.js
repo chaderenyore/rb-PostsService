@@ -1,4 +1,4 @@
-const CommunityCommunityPostsRepository = require("../repository/communityPosts.repository");
+const CommunityPostsRepository = require("../repository/communityPosts.repository");
 
 class CommunityPostsService {
   constructor() {

@@ -3,7 +3,7 @@ Joi.objectId = require("joi-objectid")(Joi);
 
 exports.createPostsSchema = Joi.object().keys({
   poster_id: Joi.objectId().required(),
-  post_title: Joi.string().reuired(),
+  post_title: Joi.string().required(),
   post_body_text: Joi.string().required(),
   poster_image: Joi.string().uri().optional(),
   post_image: Joi.string().uri().optional(),

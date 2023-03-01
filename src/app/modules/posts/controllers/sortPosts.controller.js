@@ -1,5 +1,4 @@
 const { HTTP } = require("../../../../_constants/http");
-const { TYPE } = require("../../../../_constants/record.type");
 const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");

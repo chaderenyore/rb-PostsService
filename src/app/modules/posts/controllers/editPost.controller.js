@@ -23,8 +23,8 @@ exports.updatePostInfo = async (req, res, next) => {
           },
         ])
       );
-    }
-    const dataToUpdatePost = {
+    } else {
+      const dataToUpdatePost = {
         was_edited: true,
         ...req.body
     }
@@ -50,12 +50,14 @@ exports.updatePostInfo = async (req, res, next) => {
         was_edited: true,
         ...req.body
     }
-    const postInCommunity = new await CommunityPostsService().update(
+    const postInCommunity = await new CommunityPostsService().update(
         { original_post_id: req.body.post_id, poster_id: req.user.user_id },
         dataToUpdateCommunity
       );
         return createResponse(`Post Updated`, updatedPost)(res, HTTP.OK);
       }
+    }
+ 
     }
    catch (err) {
     logger.error(err);

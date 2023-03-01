@@ -30,7 +30,7 @@ exports.createPost = async (req, res, next) => {
         ])
       );
     } else {
-    // Get user Info creating post
+    // Get user Info for creating post
     const user = await axios.post(
       `${KEYS.USER_SERVICE_URI}/users/v1/user/${req.user.user_id}?platform=web`,
       {
@@ -52,9 +52,10 @@ exports.createPost = async (req, res, next) => {
            }
     const dataToPostModel = {
       poster_id: req.user.user_id,
-      poster_fullname: fullname,
+      poster_fullname: fullname || "",
       poster_image: user.data.data.image ? user.data.data.image : "",
       poster_username: user.data.data.username ? user.data.data.username : "",
+      post_type: "original",
       ...req.body
     }
     // create post record
@@ -64,7 +65,8 @@ exports.createPost = async (req, res, next) => {
       const dataToCommunityPostModel = {
         poster_id: req.user.user_id,
         original_post_id: newPost._id,
-        poster_fullname: fullname,
+        poster_fullname: fullname || "",
+        poster_username: user.data.data.username ? user.data.data.username : "",
         poster_username: user.data.data.username ? user.data.data.username : "",
         post_type: "original",
         ...req.body

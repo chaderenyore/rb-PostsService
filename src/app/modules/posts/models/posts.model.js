@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const schema = mongoose.Schema(
   {
     poster_id: String,
+    original_post_id: {type: String},
     poster_fullname: {type: String},
     poster_username: {type: String},
     poster_image: {type: String},
@@ -10,6 +11,8 @@ const schema = mongoose.Schema(
     post_body_text: {type: String},
     post_image:{type: String},
     post_video: {type: String},
+    post_type: {type: String, enum: ["tweet", "repost", "original", "shared"]},
+    post_child: {type: Object},
     total_likes: {type: Number, default: 0},
     total_comments: {type: Number, default: 0},
     total_times_reposted: {type: Number, default: 0},
