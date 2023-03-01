@@ -6,6 +6,7 @@ const CommentService = require('../services/comments.services');
 // const logger = require('../../../../../logger.conf');
 
 exports.createComment = async (req, res, next) => {
+  // Check the post type and add it accordingly
   try {
     const newComment = await new CommentService().createComment(req.body);
     console.log('NEW COMMENT : ========= : ', newComment);
