@@ -11,8 +11,8 @@ const schema = mongoose.Schema(
     post_title: {type: String},
     original_post_id: {type: String},
     tweet_id: { type: String},
-    shared_post_id:{type: String}
-    post_type: {type: String, enum: ["tweet", "repost", "original", "shared"],},
+    shared_post_id:{type: String},
+    post_type: {type: String, enum: ["tweet", "repost", "original", "shared"]},
     total_likes: {type: Number, default: 0},
     total_comments: {type: Number, default: 0},
     total_times_reposted: {type: Number, default: 0},

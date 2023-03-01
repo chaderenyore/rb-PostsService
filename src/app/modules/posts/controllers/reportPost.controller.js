@@ -6,7 +6,6 @@ const PostsService = require("../services/posts.services");
 const CommunityPostsService = require("../services/communityPosts.services");
 const RePostsService = require("../services/repost.services");
 const TweetPostsService = require("../services/tweets.services");
-const BlockedPostsService = require("../services/blockedPosts.services");
 const ReportedPostsService = require("../services/reportedPosts.services");
 
 const logger = require("../../../../../logger.conf");

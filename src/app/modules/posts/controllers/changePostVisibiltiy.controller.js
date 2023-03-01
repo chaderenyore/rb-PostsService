@@ -6,7 +6,7 @@ const PostsService = require("../services/posts.services");
 const CommunityPostsService = require("../services/communityPosts.services");
 const RePostsService = require("../services/repost.services");
 const TweetPostsService = require("../services/tweets.services");
-const BlockedPostsService = require("../services/blockedPosts.services");
+const BlockedPostsService = require("../services/blockedPost.services");
 const logger = require("../../../../../logger.conf");
 
 exports.changeVisibility = async (req, res, next) => {
@@ -56,7 +56,7 @@ exports.changeVisibility = async (req, res, next) => {
     { original_post_isVisible: visibilityState }
   );
  const updatedbasePost = await new PostsService().update(
-            { post_id: req.user.user_id, post_id: req.query.post_id },
+            { poster_id: req.user.user_id, post_id: req.query.post_id },
             { is_visible: visibilityState }
           );
           return createResponse(resmessage, updatedbasePost)(
