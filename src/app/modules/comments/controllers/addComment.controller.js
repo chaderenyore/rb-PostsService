@@ -10,6 +10,7 @@ const CommentService = require('../services/comments.services');
 // const logger = require('../../../../../logger.conf');
 
 exports.createComment = async (req, res, next) => {
+  // Check the post type and add it accordingly
   try {
     // check if post exist
    const post = new PostsService().findAPost({_id:req.body.post_id});

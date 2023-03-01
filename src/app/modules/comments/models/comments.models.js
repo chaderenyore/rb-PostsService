@@ -4,6 +4,9 @@ const schema = mongoose.Schema(
   {
     post_id: String,
     commenter_id: String,
+    post_type: String,
+    repost_id: String,
+    tweet_id: String,
     is_parent: {type: Boolean},
     child_comment_id:{type: String},
     commenter_image: {type: String},
