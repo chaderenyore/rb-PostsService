@@ -63,12 +63,16 @@ exports.editComment = async (req, res, next) => {
       post_type: 'comment',
     };
 
-    const updateComment = await new CommentService().updateAComment(
+    const updatedComment = await new CommentService().updateAComment(
       {
         _id: req.body.comment_id,
       },
       dataToEditCommentModel
     );
+
+    // Real time update frontend
+
+    return createResponse('Comment Updated', updatedComment)(res, HTTP.OK);
   } catch (err) {
     console.log(err);
 
