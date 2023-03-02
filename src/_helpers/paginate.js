@@ -19,7 +19,7 @@ exports.getPaginatedRecords = async (
         data: result,
         pagination: {
           pageSize: limit, //number of content yousee per page
-          totalCount: modelData, //Total number of records
+          totalCount: Number(modelData), //Total number of records
           pageCount: Math.ceil(modelData / limit), //How many pages will be available
           currentPage: +page, //if you're on page 1 or 18...
           hasNext: page * limit < modelData,

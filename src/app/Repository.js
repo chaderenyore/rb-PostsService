@@ -21,6 +21,10 @@ class Repository {
     return this.Model.findOne(condition);
   }
 
+  find(condition = {}) {
+    return this.Model.find(condition);
+  }
+
   all(limit, page, data, selectedFields) {
     return getPaginatedRecords(this.Model, {
       limit: limit,
@@ -39,6 +43,10 @@ class Repository {
 
   delete(condition) {
     return this.Model.deleteMany(condition);
+  }
+
+  deleteOne(condition) {
+    return this.Model.deleteOne(condition);
   }
 
   update(condition, update) {

@@ -13,7 +13,8 @@ const KEYS = {
   PUSHER_KEY: process.env.PUSHER_KEY,
   PUSHER_SECRET: process.env.PUSHER_SECRET,
   PUSHER_CLUSTER: process.env.PUSHER_CLUSTER,
-  USER_SERVICE_URI: process.env.USER_SERVICE_URI
+  USER_SERVICE_URI: process.env.USER_SERVICE_URI,
+  AUTH_URI: process.env.AUTH_URI,
 };
 
 module.exports = KEYS;

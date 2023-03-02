@@ -24,7 +24,7 @@ exports.getAUsersPosts = async (req, res, next) => {
       let queryData = {
         reposter_id: req.user.user_id,
       };
-      posts = await new RePostsService().all(
+      posts = await new RePostsService().getAll(
         req.query.limit,
         req.query.page,
         queryData
@@ -34,12 +34,16 @@ exports.getAUsersPosts = async (req, res, next) => {
       let queryData = {
         twiter_id: req.user.user_id
       };
-      posts = await new TweetPostsService().all(
+      posts = await new TweetPostsService().getAll(
         req.query.limit,
         req.query.page,
         queryData
       );
     }
+    console.log("POSTS =================== ", posts);
+    console.log("POSTS DATA =================== ", posts.data);
+    console.log("POSTS LENTTHG =================== ", posts.data.length);
+
     if (posts && posts.data && posts.data.length === 0) {
       return next(
         createError(HTTP.OK, [
@@ -52,9 +56,21 @@ exports.getAUsersPosts = async (req, res, next) => {
           },
         ])
       );
-    } else {
+    } else if(!posts) {
+      return next(
+        createError(HTTP.OK, [
+          {
+            status: RESPONSE.SUCCESS,
+            message: "No Posts Found",
+            statusCode: HTTP.OK,
+            data: {},
+            code: HTTP.OK,
+          },
+        ])
+      );
+    } 
       return createResponse(`Posts Retrieved`, posts)(res, HTTP.OK);
-    }
+  
   } catch (err) {
     logger.error(err);
 

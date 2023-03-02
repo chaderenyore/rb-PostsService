@@ -39,13 +39,14 @@ const UploadPostMediaController = require("../controllers/uploadPostMedia.contro
 const GetPostDetailsController = require("../controllers/getPostDetails.controller");
 const DeepSearchPostsController = require("../controllers/deepSearchPosts.controller");
 
-
 const uploadFile = require("../../../../_helpers/uploadFile");
 const KEYS = require("../../../../_config/keys");
 
 const router = Router();
+
 router.post(
   "/",
+  authorize(['user','org']),
   validateRequest(CreatePost.createPostsSchema, "body"),
   CreatePostController.createPost
 );
@@ -56,17 +57,19 @@ router.get(
   authorize(['user','org']),
   GetUserPostsController.getAUsersPosts
 );
+
 router.get(
-    "/:post_id",
-    validateRequest(GetPostDetails.getSinglePostSchema, "body"),
+    "/details/:post_id",
+    validateRequest(GetPostDetails.getSinglePostSchema, "params"),
     authorize(['user','org']),
     GetPostDetailsController.getPostDtails
   );
+
 router.put(
-  "/",
+  "/block",
   authorize(['user','org']),
   validateRequest(BlockPost.blockPostQuerySchema, "query"),
-BlockPostController.blockAPost
+  BlockPostController.blockAPost
 );
 
 router.post(
@@ -91,8 +94,9 @@ router.put(
 
   router.post(
     "/edit-post",
-    validateRequest(EditPost.updatePostsSchema, "query"),
     authorize(['user','org']),
+    validateRequest(EditPost.updatePostsQuerySchema, "query"),
+    validateRequest(EditPost.updatePostsBodySchema, "body"),
     EditPostController.updatePostInfo
   );
 

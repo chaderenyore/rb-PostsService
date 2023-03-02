@@ -1,3 +1,4 @@
+const axios = require("axios").default;
 const { HTTP } = require("../../../../_constants/http");
 const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
@@ -5,33 +6,31 @@ const { createResponse } = require("../../../../_helpers/createResponse");
 const PostService = require("../services/posts.services");
 const CommunityPostService = require("../services/communityPosts.services");
 const logger = require("../../../../../logger.conf");
-const { bannedWords } = require("../../../../_helpers/BannedWords");
+const { filterBannedWords } = require("../../../../_helpers/filterBannedWords");
 const KEYS = require("../../../../_config/keys");
 
 
 exports.createPost = async (req, res, next) => {
   try {
+    // console.log("REQ USER========================", req.user)
     //  filter banned words from title and text
-    const BannedWords = await bannedWords();
-    logger.log("info", BannedWords);
-    // store body text and tile in an array
-   const titleArray = req.body.post_title.split(" ");
-   const bodyArray = req.body.post_body_text.split(" ");
-    if (titleArray.includes(BannedWords) || bodyArray.includes(BannedWords)) {
-      return next(
-        createError(HTTP.OK, [
-          {
-            status: RESPONSE.SUCCESS,
-            message: "Some Banned Words Detected",
-            statusCode: HTTP.OK,
-            data: null,
-            code: HTTP.OK,
-          },
-        ])
-      );
-    } else {
-    // Get user Info for creating post
-    const user = await axios.post(
+    const { error, message} =  filterBannedWords(req.body.post_title, req.body.post_body_text);
+    console.log(error)
+   if (error) {
+    return next(
+      createError(HTTP.OK, [
+        {
+          status: RESPONSE.SUCCESS,
+          message,
+          statusCode: HTTP.OK,
+          data: null,
+          code: HTTP.OK,
+        },
+      ])
+    );
+  } else {
+          // Get user Info for creating post
+    const user = await axios.get(
       `${KEYS.USER_SERVICE_URI}/users/v1/user/${req.user.user_id}?platform=web`,
       {
         headers: {
@@ -90,7 +89,8 @@ exports.createPost = async (req, res, next) => {
           ])
         );
       }
-    }
+  }
+ 
   } catch (err) {
     console.log(err);
 

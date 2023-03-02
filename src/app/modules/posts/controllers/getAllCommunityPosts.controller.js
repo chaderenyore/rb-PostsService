@@ -12,8 +12,9 @@ exports.getAllCommunityPostPosts = async (req, res, next) => {
   try {
     // Container for allposts retrieved
     let data= {};
-    const allPosts = [];
-    const usersBlockedPostsIds = [];
+    let allPosts = [];
+    let filterPosts = [];
+    let usersBlockedPostsIds = [];
     // search for posts
     const posts = await new CommunityPostsService().getAll(req.query.limit, req.query.page, {});
     if (posts.data.length === 0) {
@@ -29,36 +30,49 @@ exports.getAllCommunityPostPosts = async (req, res, next) => {
         ])
       );
     } else {
+      console.log("COMMUNITY POSTS ================= ", posts);
+      // console.log("COMMUNITY POSTS ================= ", posts.data);
+      // console.log("COMMUNITY POSTS ================= ", posts.data.length);
     // get users blocked posts ids
-    const usersBlockedPosts = await new BlockedPostsService().find({blocker_id: req.user.user_id})
-    for(let ids; ids < usersBlockedPosts.length; ids++){
-      usersBlockedPostsIds.push(usersBlockedPosts.post_id[ids])
+    const usersBlockedPosts = await new BlockedPostsService().getAll({blocker_id: req.user.user_id});
+    // console.log("User Blocked Post ============= ", usersBlockedPosts);
+    console.log("User Blocked Post ============= ", usersBlockedPosts.data);
+
+    for(let i = 0; i < usersBlockedPosts.data.length; i++){
+      usersBlockedPostsIds.push(usersBlockedPosts.data[i].post_id)
     }
   //  loop through data and find the one that has children
-  for(let post; post < posts.data.length; post++){
-    if(!usersBlockedPostsIds.includes(posts.data[post].post_id)){
+  for(let post = 0; post < posts.data.length; post++){
+    if(!usersBlockedPostsIds.includes(posts.data[post].original_post_id)){
       allPosts.push(posts.data[post]);
     }
-    if(post.data[post].post_type === "tweet" || post.data[post].post_type === "repost"  || post.data[post].post_type === "shared"){
+  }
+  console.log("ALL POSTS ================= ", allPosts);
+  for(let post = 0; post < allPosts.length; post++){
+    if(allPosts[post].post_type === "original"){
+      filterPosts.push(allPosts[post]);
+    }
+    if(allPosts[post].post_type === "tweet" || allPosts[post].post_type === "repost"  || allPosts[post].post_type === "shared"){
       // find origianl post
-      const originalPost = await new PostsService().findAPost({_id: post.data[post].original_post_id});
+      const originalPost = await new PostsService().findAPost({_id: allPosts[post].original_post_id});
       if(originalPost && originalPost.is_visible === false){
-      post.data[post].originalPost = "Original Post Visibility off";
-      allPosts.push(post.data[post]);
+      allPosts[post].originalPost = "Original Post Visibility off";
+      filterPosts.push(allPosts[post]);
       } else{
-        post.data[post].originalPost = originalPost;
-        allPosts.push(post.data[post]);
+        allPosts[post].originalPost = originalPost;
+        filterPosts.push(allPosts[post]);
       }
     }
   }
   // build data to return
-  data.allPosts = allPosts;
+  data.filterPosts = filterPosts;
   data.pagination = posts.pagination;
-      return createResponse("Community Posts Retirived", data)(res, HTTP.OK);
+  // reduce data total count by number of blocked posts removed
+  data.pagination.totalCount = Number(posts.pagination.totalCount) - Number(usersBlockedPosts.pagination.totalCount);
+      return createResponse("Community Posts Retrieved", data)(res, HTTP.OK);
     }
   } catch (err) {
     logger.error(err);
-
     return next(createError.InternalServerError(err));
   }
 };

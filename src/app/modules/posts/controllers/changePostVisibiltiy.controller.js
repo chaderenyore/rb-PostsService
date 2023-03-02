@@ -12,12 +12,12 @@ const logger = require("../../../../../logger.conf");
 exports.changeVisibility = async (req, res, next) => {
   try {
     // search if usr owns post
-    const myPost = await new PostsService().findAPost({poster_id:req.user.usr_id, post_id:req.query.post_id});
+    const myPost = await new PostsService().findAPost({poster_id:req.user.user_id, post_id:req.query.post_id});
     if (!myPost) {
       return next(
         createError(HTTP.UNAUTHORIZED, [
           {
-            status: RESPONSE.SUCCESS,
+            status: RESPONSE.ERROR,
             message: "Unauthorized To Perform This Action",
             statusCode: HTTP.UNAUTHORIZED,
             data: null,
@@ -26,6 +26,32 @@ exports.changeVisibility = async (req, res, next) => {
         ])
       );
     } else {
+      if(req.query.visible === "true" && myPost.is_visible === true){
+        return next(
+          createError(HTTP.OK, [
+            {
+              status: RESPONSE.SUCCESS,
+              message: "Visibility ALready Turned On",
+              statusCode: HTTP.OK,
+              data: null,
+              code: HTTP.OK,
+            },
+          ])
+        );
+      }
+      if(req.query.visible === "false" && myPost.is_visible === false){
+        return next(
+          createError(HTTP.OK, [
+            {
+              status: RESPONSE.SUCCESS,
+              message: "Visibility ALready Turned Off",
+              statusCode: HTTP.OK,
+              data: null,
+              code: HTTP.OK,
+            },
+          ])
+        );
+      }
       let visibilityState;
       let resmessage;
       if(req.query.visible === "true"){

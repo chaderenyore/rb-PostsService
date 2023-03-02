@@ -5,35 +5,35 @@ class BannedPostsService {
     this.BannedPostsRepository = BannedPostsRepository;
   }
   
-  create(data) {
+  async create(data) {
     return this.BannedPostsRepository.create(data)
   }
 
-  findARecord(query) {
+  async findARecord(query) {
     return this.BannedPostsRepository.findOne(query);
   }
 
-  update(condition, update) {
+  async update(condition, update) {
     return this.BannedPostsRepository.update(condition, update)
   }
 
-  getAll(limit, page, data, selectedFields) {
+  async getAll(limit, page, data, selectedFields) {
    return this.BannedPostsRepository.all(limit, page, data, selectedFields)
 
   }
 
-  findById(id) {
+  async findById(id) {
     return this.BannedPostsRepository.findById(id)
   }
 
-  deletAll() {
+  async deletAll() {
     this.BannedPostsRepository.delete({})
   }
 
-  deletOne (condition) {
-    this.BannedPostsRepository.delete(condition)
+  async deletOne (condition) {
+    this.BannedPostsRepository.deleteOne(condition)
   }
-  updateMany(condition, update) {
+  async updateMany(condition, update) {
     return this.Model.updateMany(condition, update, {
       new: true,
       lean: true,
