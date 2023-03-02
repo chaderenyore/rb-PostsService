@@ -14,6 +14,6 @@ exports.pusher = async () => {
         //   handle error 
           return pusher;
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
 }

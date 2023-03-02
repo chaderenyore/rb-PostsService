@@ -63,7 +63,7 @@ exports.tweetAPost = async (req, res, next) => {
         Tweet.child = post;
         // save post to post model for reference
         const dataToPostModel = {
-          poster_id: req.user.user_id,
+          poster_id: post.poster_id,
           original_post_id: post._id,
           reposter_id: req.user.user_di,
           post_title: req.body.resposted_title,

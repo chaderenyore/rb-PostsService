@@ -5,7 +5,6 @@ const { createResponse } = require("../../../../_helpers/createResponse");
 const PostsService = require("../services/posts.services");
 const CommunityPostsService = require("../services/communityPosts.services");
 
-
 const logger = require("../../../../../logger.conf");
 
 exports.updatePostInfo = async (req, res, next) => {
@@ -26,8 +25,8 @@ exports.updatePostInfo = async (req, res, next) => {
     } else {
       const dataToUpdatePost = {
         was_edited: true,
-        ...req.body
-    }
+        ...req.body,
+      };
       const updatedPost = await new PostsService().update(
         { post_id: req.body.post_id, poster_id: req.user.user_id },
         dataToUpdatePost
@@ -36,7 +35,7 @@ exports.updatePostInfo = async (req, res, next) => {
         return next(
           createError(HTTP.OK, [
             {
-              status: RESPONSE.ERROR,
+              status: RESPONSE.SUCCESS,
               message: "Post Does Not Exist/UnAuthorised",
               statusCode: HTTP.Ok,
               data: {},
@@ -44,22 +43,20 @@ exports.updatePostInfo = async (req, res, next) => {
             },
           ])
         );
-        } else {
-    //  update community posts
-    const dataToUpdateCommunity = {
-        was_edited: true,
-        ...req.body
-    }
-    const postInCommunity = await new CommunityPostsService().update(
-        { original_post_id: req.body.post_id, poster_id: req.user.user_id },
-        dataToUpdateCommunity
-      );
+      } else {
+        //  update community posts
+        const dataToUpdateCommunity = {
+          was_edited: true,
+          ...req.body,
+        };
+        const postInCommunity = await new CommunityPostsService().update(
+          { original_post_id: req.body.post_id, poster_id: req.user.user_id },
+          dataToUpdateCommunity
+        );
         return createResponse(`Post Updated`, updatedPost)(res, HTTP.OK);
       }
     }
- 
-    }
-   catch (err) {
+  } catch (err) {
     logger.error(err);
     return next(createError.InternalServerError(err));
   }

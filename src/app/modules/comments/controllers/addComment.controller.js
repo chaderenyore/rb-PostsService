@@ -2,15 +2,94 @@ const { HTTP } = require('../../../../_constants/http');
 const { RESPONSE } = require('../../../../_constants/response');
 const createError = require('../../../../_helpers/createError');
 const { createResponse } = require('../../../../_helpers/createResponse');
+const PostsService = require("../../posts/services/posts.services");
+const CommunityPostsService = require("../../posts/services/communityPosts.services");
+const RepostService = require("../../posts/services/repost.services");
+const TweetService = require("../../posts/services/tweets.services");
 const CommentService = require('../services/comments.services');
 // const logger = require('../../../../../logger.conf');
 
 exports.createComment = async (req, res, next) => {
   // Check the post type and add it accordingly
   try {
-    const newComment = await new CommentService().createComment(req.body);
-    console.log('NEW COMMENT : ========= : ', newComment);
-    return createResponse('Comment Created', newComment)(res, HTTP.OK);
+    // check if post exist
+   const post = new PostsService().findAPost({_id:req.body.post_id});
+   if(!post){
+    return next(
+      createError(HTTP.OK, [
+        {
+          status: RESPONSE.SUCCESS,
+          message: "Post Does Not Exist",
+          statusCode: HTTP.Ok,
+          data: {},
+          code: HTTP.Ok,
+        },
+      ])
+    );
+   } else {
+          // Get user Info creating post
+          const user = await axios.post(
+            `${KEYS.USER_SERVICE_URI}/users/v1/user/${req.user.user_id}?platform=web`,
+            {
+              headers: {
+                Authorization: `Bearer ${req.token}`,
+              },
+            }
+          );
+          if (user && user.data && user.data.code === 200) {
+            let firstname;
+            let fullname;
+            if(user.data.data.first_name && user.data.data.firstname !== " "){
+             firstname = user.data.data.firstname;
+             fullname = firstname;
+            }
+            if(user.data.data.last_name && user.data.data.last_name !== " "){
+             fullname = `${firstname} ${user.data.data.last_name}`
+            }
+               // create comment
+    const dataToCommentModel = {
+      post_id: post.post_id,
+      commenter_id: req.user.user_id,
+      is_parent: true,
+      commenter_image: user.data.data.image ? user.data.data.image : "",
+      commenter_fullname: fullname,
+      commenter_username: user.data.data.username,
+      comment_body_text: req.body.comment_body_text,
+      post_type: "comment",
+    }
+    const newComment = await new CommentService().createComment(dataToCommentModel);
+    // update community
+    const updatedCommunity = await new CommunityPostsService().update(
+      { original_post_id: req.body.post_id },
+      { $inc: { 'total_comments': 1 } }
+    )
+       if(post.post_type === "tweet"){
+        // update tweet model
+        const updatedTweet = await new TweetService().update(
+          { post_id: req.body.post_id },
+          { $inc: { 'total_comments': 1 } }
+        )
+        // Real time update frontend
+       }
+       if(post.post_type === "repost"){
+        // update repost model comment count
+        const updatedRepost = await new RepostService().update(
+          { post_id: req.body.post_id },
+          { $inc: { 'total_comments': 1 } }
+        )
+        // Real time update frontend
+
+       }
+      //  update post model
+      const updatedPost = await new PostsService().update(
+        { _id: req.body.post_id },
+        { $inc: { 'total_comments': 1 } }
+      );
+      return createResponse('Comment Created', newComment)(res, HTTP.OK);
+   }
+
+          }
+ 
   } catch (err) {
     console.log(err);
 

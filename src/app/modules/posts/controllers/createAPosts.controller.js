@@ -66,7 +66,7 @@ exports.createPost = async (req, res, next) => {
         poster_id: req.user.user_id,
         original_post_id: newPost._id,
         poster_fullname: fullname || "",
-        poster_username: user.data.data.username ? user.data.data.username : "",
+        poster_image: user.data.data.image ? user.data.data.image : "",
         poster_username: user.data.data.username ? user.data.data.username : "",
         post_type: "original",
         ...req.body

@@ -17,7 +17,7 @@ const RepostPost = require("../../validators/posts/repost..validator");
 const SortPost = require("../../validators/posts/sortPosts.validator");
 const TweetPost = require("../../validators/posts/tweetPost.validator");
 const UploadPostMedia = require("../../validators/posts/uploadPostMedia.validators");
-
+const GetPostDetails = require("../../validators/posts/getAPostDetails.validator");
 // controllers
 const CreatePostController = require("../controllers/createAPosts.controller");
 const GetUserPostsController = require("../controllers/getUsersPosts.controller");
@@ -33,6 +33,7 @@ const RepostPostController = require("../controllers/repost.controller");
 const SortPostController = require("../controllers/sortPosts.controller");
 const TweetPostController = require("../controllers/tweet.controller");
 const UploadPostMediaController = require("../controllers/uploadPostMedia.controller");
+const GetPostDetailsController = require("../controllers/getPostDetails.controller");
 
 const uploadFile = require("../../../../_helpers/uploadFile");
 const KEYS = require("../../../../_config/keys");
@@ -50,7 +51,12 @@ router.get(
   authorize(['user','org']),
   GetUserPostsController.getAUsersPosts
 );
-
+router.get(
+    "/:post_id",
+    validateRequest(GetPostDetails.getSinglePostSchema, "body"),
+    authorize(['user','org']),
+    GetPostDetailsController.getPostDtails
+  );
 router.put(
   "/",
   authorize(['user','org']),
