@@ -27,8 +27,8 @@ exports.editComment = async (req, res, next) => {
           },
         ])
       );
-    } 
-    // check if the user trying to edit is the same as the poster
+    }
+    // check if the user trying to edit is the same as the commenter
     const user = await axios.post(
       `${KEYS.USER_SERVICE_URI}/users/v1/user/${req.user.user_id}?platform=web`,
       {
@@ -38,12 +38,16 @@ exports.editComment = async (req, res, next) => {
       }
     );
 
-    if(user.user_id !== post.poster_id) {
+    const comment = new CommentService.findAComment({
+      _id: req.body.comment_id,
+    });
+
+    if (user.user_id !== comment.commenter_id) {
       return next(
         createError(HTTP.UNAUTHORIZED, [
           {
             status: RESPONSE.SUCCESS,
-            message: 'User is not the same person as Poster',
+            message: 'User is not the same person as Commenter',
             statusCode: HTTP.UNAUTHORIZED,
             data: {},
             code: HTTP.UNAUTHORIZED,
@@ -52,8 +56,19 @@ exports.editComment = async (req, res, next) => {
       );
     }
 
-    
+    //Update comment
+    const dataToEditCommentModel = {
+      commenter_id: req.user.user_id,
+      comment_body_text: req.body.comment_body_text,
+      post_type: 'comment',
+    };
 
+    const updateComment = await new CommentService().updateAComment(
+      {
+        _id: req.body.comment_id,
+      },
+      dataToEditCommentModel
+    );
   } catch (err) {
     console.log(err);
 
