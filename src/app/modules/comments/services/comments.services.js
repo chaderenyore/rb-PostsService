@@ -1,12 +1,12 @@
-const CommentsRepository = require("../repository/comments.repository");
+const CommentsRepository = require('../repository/comments.repository');
 
 class CommentsService {
   constructor() {
     this.CommentsRepository = CommentsRepository;
   }
-  
+
   async createComment(data) {
-    return this.CommentsRepository.create(data)
+    return this.CommentsRepository.create(data);
   }
 
   async findAComment(query) {
@@ -14,24 +14,23 @@ class CommentsService {
   }
 
   async updateAComment(condition, update) {
-    this.CommentsRepository.update(condition, update)
+    this.CommentsRepository.update(condition, update);
   }
 
-  async GetAllRecords(limit, page, data, selectedFields) {
-   this.CommentsRepository.all(limit, page, data, selectedFields)
-
+  async GetAllComments(limit, page, data, selectedFields) {
+    this.CommentsRepository.all(limit, page, data, selectedFields);
   }
 
   async findRecordById(id) {
-    this.CommentsRepository.findById(id)
+    this.CommentsRepository.findById(id);
   }
 
   async deletAll() {
-    this.CommentsRepository.delete({})
+    this.CommentsRepository.delete({});
   }
 
-  async deletOne (condition) {
-    this.CommentsRepository.delete(condition)
+  async deletOne(condition) {
+    this.CommentsRepository.delete(condition);
   }
 }
 

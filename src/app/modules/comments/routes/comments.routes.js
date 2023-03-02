@@ -7,12 +7,13 @@ const editCommentSchema = require('../../../modules/validators/comments/editComm
 
 const AddCommentController = require('../controllers/addComment.controller')
 const EditCommentController = require('../controllers/editComment.controller.js')
-
+const GetCommentController = require('../controllers/getComments.controller')
 
 const router = Router();
 router.get(
   '/:post_id',
-  validateRequest(getCommentSchema.getCommentSchema, 'body')
+  validateRequest(getCommentSchema.getCommentSchema, 'body'),
+  GetCommentController.getComment
 );
 
 router.post(
