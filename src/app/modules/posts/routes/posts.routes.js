@@ -18,6 +18,9 @@ const SortPost = require("../../validators/posts/sortPosts.validator");
 const TweetPost = require("../../validators/posts/tweetPost.validator");
 const UploadPostMedia = require("../../validators/posts/uploadPostMedia.validators");
 const GetPostDetails = require("../../validators/posts/getAPostDetails.validator");
+const DeepSearchPosts = require("../../validators/posts/deepSearch.validator");
+
+
 // controllers
 const CreatePostController = require("../controllers/createAPosts.controller");
 const GetUserPostsController = require("../controllers/getUsersPosts.controller");
@@ -34,6 +37,8 @@ const SortPostController = require("../controllers/sortPosts.controller");
 const TweetPostController = require("../controllers/tweet.controller");
 const UploadPostMediaController = require("../controllers/uploadPostMedia.controller");
 const GetPostDetailsController = require("../controllers/getPostDetails.controller");
+const DeepSearchPostsController = require("../controllers/deepSearchPosts.controller");
+
 
 const uploadFile = require("../../../../_helpers/uploadFile");
 const KEYS = require("../../../../_config/keys");
@@ -140,6 +145,13 @@ router.put(
     validateRequest(UploadPostMedia.uploadPostMediaQuerySchema, "query"),
     uploadFile("posts").single("post_media"),
     UploadPostMediaController.updatePostMedia
+  );
+
+  router.post(
+    "/search",
+    validateRequest(DeepSearchPosts.deepSearchSchema, "query"),
+    authorize(['user','org']),
+    DeepSearchPostsController.deepSearchPost
   );
 
 module.exports = router;
