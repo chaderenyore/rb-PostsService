@@ -13,7 +13,7 @@ class CommentsService {
     this.CommentsRepository.findOne(query);
   }
 
-  async updateARecord(condition, update) {
+  async updateAComment(condition, update) {
     this.CommentsRepository.update(condition, update)
   }
 

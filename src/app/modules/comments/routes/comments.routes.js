@@ -3,8 +3,11 @@ const validateRequest = require('../../../middlewares/vallidate');
 
 const commentSchema = require('../../../modules/validators/comments/comments.validator.js');
 const getCommentSchema = require('../../../modules/validators/comments/getComments.validator.js');
+const editCommentSchema = require('../../../modules/validators/comments/editComment.validator.js');
 
-const AddCommentController = require('../controllers/addComment.controller');
+const AddCommentController = require('../controllers/addComment.controller')
+const EditCommentController = require('../controllers/editComment.controller.js')
+
 
 const router = Router();
 router.get(
@@ -18,6 +21,16 @@ router.post(
   AddCommentController.createComment
 );
 
-router.post('/delete', validateRequest(commentSchema.commentSchema, 'body'));
+router.post(
+  '/edit-comment',
+  validateRequest(editCommentSchema.editCommentSchema, "body"),
+  EditCommentController.editComment
+);
+
+router.post(
+  '/delete',
+  validateRequest(commentSchema.commentSchema, "body")
+
+);
 
 module.exports = router;
