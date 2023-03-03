@@ -5,35 +5,35 @@ class RePostService {
     this.RePostsRepository = RePostsRepository;
   }
   
-  create(data) {
+  async create(data) {
     return this.RePostsRepository.create(data)
   }
 
-  findOne(query) {
+  async findOne(query) {
     return this.RePostsRepository.findOne(query);
   }
 
-  update(condition, update) {
+  async update(condition, update) {
     return this.RePostsRepository.update(condition, update)
   }
 
-  getAll(limit, page, data, selectedFields) {
+  async getAll(limit, page, data, selectedFields) {
    return this.RePostsRepository.all(limit, page, data, selectedFields)
 
   }
 
-  findById(id) {
+  async findById(id) {
     return this.RePostsRepository.findById(id)
   }
 
-  deletAll() {
+  async deletAll() {
     this.RePostsRepository.delete({})
   }
 
-  deletOne (condition) {
-    this.RePostsRepository.delete(condition)
+  async deletOne (condition) {
+    this.RePostsRepository.deleteOne(condition)
   }
-  updateMany(condition, update) {
+  async updateMany(condition, update) {
     return this.Model.updateMany(condition, update, {
       new: true,
       lean: true,

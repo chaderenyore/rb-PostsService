@@ -5,35 +5,35 @@ class PostsService {
     this.PostsRepository = PostsRepository;
   }
   
-  create(data) {
+  async create(data) {
     return this.PostsRepository.create(data)
   }
 
-  findAPost(query) {
+  async findAPost(query) {
     return this.PostsRepository.findOne(query);
   }
 
-  update(condition, update) {
+  async update(condition, update) {
     return this.PostsRepository.update(condition, update)
   }
 
-  getAll(limit, page, data, selectedFields) {
+  async getAll(limit, page, data, selectedFields) {
    return this.PostsRepository.all(limit, page, data, selectedFields)
 
   }
 
-  findById(id) {
+  async findById(id) {
     return this.PostsRepository.findById(id)
   }
 
-  deletAll() {
-    this.PostsRepository.delete({})
+  async deletAll() {
+    return this.PostsRepository.delete({})
   }
 
-  deletOne (condition) {
-    this.PostsRepository.delete(condition)
+  async deleteOne (condition) {
+    return this.PostsRepository.deleteOne(condition)
   }
-  updateMany(condition, update) {
+  async updateMany(condition, update) {
     return this.Model.updateMany(condition, update, {
       new: true,
       lean: true,

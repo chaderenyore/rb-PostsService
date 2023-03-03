@@ -5,35 +5,39 @@ class BlockedPostsService {
     this.BlockedPostsRepository = BlockedPostsRepository;
   }
   
-  create(data) {
+  async create(data) {
     return this.BlockedPostsRepository.create(data)
   }
 
-  findAPost(query) {
+  async findAPost(query) {
     return this.BlockedPostsRepository.findOne(query);
   }
 
-  update(condition, update) {
+  async update(condition, update) {
     return this.BlockedPostsRepository.update(condition, update)
   }
 
-  getAll(limit, page, data, selectedFields) {
+  async find(condition) {
+    return this.BlockedPostsRepository.find(condition)
+  }
+ 
+  async getAll(limit, page, data, selectedFields) {
    return this.BlockedPostsRepository.all(limit, page, data, selectedFields)
 
   }
 
-  findById(id) {
+  async findById(id) {
     return this.BlockedPostsRepository.findById(id)
   }
 
-  deletAll() {
+  async deletAll() {
     this.BlockedPostsRepository.delete({})
   }
 
-  deletOne (condition) {
-    this.BlockedPostsRepository.delete(condition)
+  async deletOne (condition) {
+    this.BlockedPostsRepository.deleteOne(condition)
   }
-  updateMany(condition, update) {
+  async updateMany(condition, update) {
     return this.Model.updateMany(condition, update, {
       new: true,
       lean: true,
