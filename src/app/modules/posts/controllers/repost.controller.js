@@ -71,6 +71,7 @@ exports.repost = async (req, res, next) => {
           poster_username: user.data.data.username
             ? user.data.data.username
             : "",
+          post_child:post
         };
         const communityPost = await new CommunityPostsService().create(
           dataToCommunityPostModel

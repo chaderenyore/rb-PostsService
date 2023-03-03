@@ -24,7 +24,7 @@ exports.updatePostMedia = async (req, res, next) => {
        // build data to send
   let dataToUpdate;
   let media;
-  if(req.query.type === "video"){
+  if(req.query.media_type === "video"){
     dataToUpdate = {
        post_video: req.file?.location 
     };
@@ -32,7 +32,7 @@ exports.updatePostMedia = async (req, res, next) => {
       post_video: req.file?.location
     };
   }
-  if(req.query.type === "image"){
+  if(req.query.media_type === "image"){
     dataToUpdate = {
        post_image: req.file?.location
     };
@@ -42,14 +42,14 @@ exports.updatePostMedia = async (req, res, next) => {
   }
   // update post and community posts
   await new CommunityPostsService().update(
-    { original_post_id: req.body.post_id, poster_id: req.user.user_id },
+    { original_post_id: req.query.post_id, poster_id: req.user.user_id },
     dataToUpdate
   )
   await new PostsService().update(
-      { poster_id: req.user.user_id, post_id: req.body.post_id },
+      { poster_id: req.user.user_id, _id: req.query.post_id },
       dataToUpdate
     );
-    return createResponse("Post Media Uploaded", { media: req.file?.location })(
+    return createResponse("Post Media Uploaded", media)(
       res,
       HTTP.OK
     );

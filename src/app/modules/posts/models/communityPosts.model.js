@@ -10,6 +10,8 @@ const schema = mongoose.Schema(
     poster_image: {type: String},
     post_title: {type: String},
     original_post_id: {type: String},
+    post_image: {type: String},
+    post_child:{type: Object},
     tweet_id: { type: String},
     shared_post_id:{type: String},
     post_type: {type: String, enum: ["tweet", "repost", "original", "shared"]},
