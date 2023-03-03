@@ -27,11 +27,11 @@ class CommunityPostsService {
   }
 
   async deletAll() {
-    this.CommunityPostsRepository.delete({})
+    return this.CommunityPostsRepository.delete({})
   }
 
   async deletOne (condition) {
-    this.CommunityPostsRepository.deleteOne(condition)
+    return this.CommunityPostsRepository.deleteOne(condition)
   }
   async updateMany(condition, update) {
     return this.Model.updateMany(condition, update, {

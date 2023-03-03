@@ -2,7 +2,7 @@ const { HTTP } = require("../../../../_constants/http");
 const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
-const PostService = require("../services/posts.services");
+const PostsService = require("../services/posts.services");
 const CommunityPostsService = require("../services/communityPosts.services");
 const RePostsService = require("../services/repost.services");
 const TweetPostsService = require("../services/tweets.services");
@@ -17,11 +17,11 @@ exports.sortPosts = async (req, res, next) => {
         let sortCondition = {
             poster_id: req.user.user_id,
             created_at: {
-              $gte: req.body.start_date,
-              $lt: req.body.end_date,
+              $gte: req.query.start_date,
+              $lt: req.query.end_date,
             },
           }
-         posts = await new PostsService().all(
+         posts = await new PostsService().getAll(
             req.query.limit,
             req.query.page,
             sortCondition
@@ -30,25 +30,26 @@ exports.sortPosts = async (req, res, next) => {
     if(req.query.post_type === 'community'){
         let sortCondition = {
             created_at: {
-              $gte: req.body.start_date,
-              $lt: req.body.end_date,
+              $gte: req.query.start_date,
+              $lt: req.query.end_date,
             },
           }
-            posts = await new CommunityPostsService().all(
+            posts = await new CommunityPostsService().getAll(
             req.query.limit,
             req.query.page,
             sortCondition
           );
+      console.log("POSTS ============== ", posts);
     }
     if(req.query.post_type === 'myreposts'){
         let sortCondition = {
             reposter_id: req.user.user_id,
             created_at: {
-              $gte: req.body.start_date,
-              $lt: req.body.end_date,
+              $gte: req.query.start_date,
+              $lt: req.query.end_date,
             },
           }
-         posts = await new RePostsService().all(
+         posts = await new RePostsService().getAll(
             req.query.limit,
             req.query.page,
             sortCondition
@@ -58,11 +59,11 @@ exports.sortPosts = async (req, res, next) => {
         let sortCondition = {
             twiter_id:req.user.user_id, 
             created_at: {
-              $gte: req.body.start_date,
-              $lt: req.body.end_date,
+              $gte: req.query.start_date,
+              $lt: req.query.end_date,
             },
           }
-         posts = await new TweetPostsService().all(
+         posts = await new TweetPostsService().getAll(
             req.query.limit,
             req.query.page,
             sortCondition
