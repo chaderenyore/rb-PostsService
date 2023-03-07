@@ -10,28 +10,28 @@ class PostLikesService {
   }
 
   async findARecord(query) {
-    this.PostLikesRepository.findOne(query);
+    return this.PostLikesRepository.findOne(query);
   }
 
   async updateARecord(condition, update) {
-    this.PostLikesRepository.update(condition, update)
+    return this.PostLikesRepository.update(condition, update)
   }
 
   async GetAllRecords(limit, page, data, selectedFields) {
-   this.PostLikesRepository.all(limit, page, data, selectedFields)
+   return this.PostLikesRepository.all(limit, page, data, selectedFields)
 
   }
 
   async findRecordById(id) {
-    this.PostLikesRepository.findById(id)
+    return this.PostLikesRepository.findById(id)
   }
 
   async deletAll() {
-    this.PostLikesRepository.delete({})
+    return this.PostLikesRepository.delete({})
   }
 
   async deletOne (condition) {
-    this.PostLikesRepository.delete(condition)
+    return this.PostLikesRepository.delete(condition)
   }
 }
 
