@@ -10,28 +10,28 @@ class CommentsService {
   }
 
   async findAComment(query) {
-    this.CommentsRepository.findOne(query);
+    return this.CommentsRepository.findOne(query);
   }
 
   async updateARecord(condition, update) {
-    this.CommentsRepository.update(condition, update)
+    return this.CommentsRepository.update(condition, update)
   }
 
   async GetAllRecords(limit, page, data, selectedFields) {
-   this.CommentsRepository.all(limit, page, data, selectedFields)
+   return this.CommentsRepository.all(limit, page, data, selectedFields)
 
   }
 
   async findRecordById(id) {
-    this.CommentsRepository.findById(id)
+    return this.CommentsRepository.findById(id)
   }
 
   async deletAll() {
-    this.CommentsRepository.delete({})
+    return this.CommentsRepository.delete({})
   }
 
   async deletOne (condition) {
-    this.CommentsRepository.delete(condition)
+    return this.CommentsRepository.delete(condition)
   }
 }
 
