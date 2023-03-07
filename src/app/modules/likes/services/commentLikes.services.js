@@ -10,28 +10,28 @@ class ComentLikesService {
   }
 
   async findARecord(query) {
-    this.CommentLikesRepository.findOne(query);
+    return this.CommentLikesRepository.findOne(query);
   }
 
   async updateARecord(condition, update) {
-    this.CommentLikesRepository.update(condition, update)
+    return this.CommentLikesRepository.update(condition, update)
   }
 
   async GetAllRecords(limit, page, data, selectedFields) {
-   this.CommentLikesRepository.all(limit, page, data, selectedFields)
+   return this.CommentLikesRepository.all(limit, page, data, selectedFields)
 
   }
 
   async findRecordById(id) {
-    this.CommentLikesRepository.findById(id)
+    return this.CommentLikesRepository.findById(id)
   }
 
   async deletAll() {
-    this.CommentLikesRepository.delete({})
+    return this.CommentLikesRepository.delete({})
   }
 
   async deletOne (condition) {
-    this.CommentLikesRepository.delete(condition)
+    return this.CommentLikesRepository.delete(condition)
   }
 }
 

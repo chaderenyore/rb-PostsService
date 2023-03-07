@@ -82,7 +82,7 @@ exports.changeVisibility = async (req, res, next) => {
     { original_post_isVisible: visibilityState }
   );
  const updatedbasePost = await new PostsService().update(
-            { poster_id: req.user.user_id, post_id: req.query.post_id },
+            { poster_id: req.user.user_id, _id: req.query.post_id },
             { is_visible: visibilityState }
           );
           return createResponse(resmessage, updatedbasePost)(

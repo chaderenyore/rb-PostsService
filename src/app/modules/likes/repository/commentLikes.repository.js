@@ -1,10 +1,10 @@
 const Repository = require("../../../Repository");
-const ComnentLikes = require("../models/commentLikes.model");
+const CommentLikes = require("../models/commentLikes.model");
 
-class ComnentLikesRepository extends Repository {
+class CommentLikesRepository extends Repository {
     constructor() {
-        super(ComnentLikes);
+        super(CommentLikes);
     };
 }
 
-module.exports = new ComnentLikesRepository();
+module.exports = new CommentLikesRepository();
