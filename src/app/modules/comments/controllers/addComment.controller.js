@@ -1,3 +1,5 @@
+const axios = require("axios").default;
+const { init_pusher } = require("../../../../_events/pusher")
 const { HTTP } = require('../../../../_constants/http');
 const { RESPONSE } = require('../../../../_constants/response');
 const createError = require('../../../../_helpers/createError');
@@ -7,6 +9,8 @@ const CommunityPostsService = require("../../posts/services/communityPosts.servi
 const RepostService = require("../../posts/services/repost.services");
 const TweetService = require("../../posts/services/tweets.services");
 const CommentService = require('../services/comments.services');
+const KEYS = require("../../../../_config/keys");
+
 // const logger = require('../../../../../logger.conf');
 
 exports.createComment = async (req, res, next) => {
@@ -28,7 +32,7 @@ exports.createComment = async (req, res, next) => {
     );
    } else {
           // Get user Info creating post
-          const user = await axios.post(
+          const user = await axios.get(
             `${KEYS.USER_SERVICE_URI}/users/v1/user/${req.user.user_id}?platform=web`,
             {
               headers: {
@@ -78,7 +82,8 @@ exports.createComment = async (req, res, next) => {
           { $inc: { 'total_comments': 1 } }
         )
         // Real time update frontend
-
+       const pusher = await init_pusher();
+       pusher.trigger("comments", dataToCommentModel);
        }
       //  update post model
       const updatedPost = await new PostsService().update(
