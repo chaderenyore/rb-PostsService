@@ -50,6 +50,7 @@ router.post(
 
 router.post(
   "/unlike-comment",
+  authorize(['user','org']),
   validateRequest(UnlikeAComment.UnlikeACommentQuerySchema, "query"),
   UnlikeACommentController.unLikeAComment
 );

@@ -9,15 +9,15 @@ exports.getACommentLikes = async (req, res, next) => {
   try {
     // query data
     const dataToQuery = {
-        post_id: req.query.post_id
+        comment_id: req.query.post_id
     } 
-    const comments = await new CommentLikeService().GetAllRecords(req.query.limit, req.query.page, dataToQuery);
-    if (comments.data.length === 0) {
+    const Likes = await new CommentLikeService().GetAllRecords(req.query.limit, req.query.page, dataToQuery);
+    if (Likes.data.length === 0) {
       return next(
         createError(HTTP.OK, [
           {
             status: RESPONSE.SUCCESS,
-            message: "This Post Has No Comments",
+            message: "This Comments Has No Likes",
             statusCode: HTTP.OK,
             data: null,
             code: HTTP.OK,
@@ -25,7 +25,7 @@ exports.getACommentLikes = async (req, res, next) => {
         ])
       );
     } else {
-        return createResponse("Comments Likes Retreived", comments)(res, HTTP.OK);
+        return createResponse("Comments Likes Retreived", Likes)(res, HTTP.OK);
       } 
   } catch (err) {
     logger.error(err);

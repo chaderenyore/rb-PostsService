@@ -38,7 +38,7 @@ exports.unLikeAPost = async (req, res, next) => {
             createError(HTTP.OK, [
               {
                 status: RESPONSE.SUCCESS,
-                message: "You Have Npot LIke This Post",
+                message: "You Have Not LIke This Post",
                 statusCode: HTTP.OK,
                 data: null,
                 code: HTTP.OK,
@@ -50,7 +50,7 @@ exports.unLikeAPost = async (req, res, next) => {
             post_id: req.query.original_post_id,
             user_id: req.user.user_id,
           });
-          // increment like count on post
+          // decrement like count on post
           const updatedCommunityPost = await new CommunityService().update(
             { original_post_id: req.query.original_post_id },
             { $inc: { 'total_likes': -1 } }
