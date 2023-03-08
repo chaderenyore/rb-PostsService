@@ -26,7 +26,21 @@ exports.updatePostInfo = async (req, res, next) => {
     } else {
       // fetch post and compare titles and body text
       const post = await new PostsService().findAPost({_id: req.query.post_id, poster_id: req.user.user_id});
-      if(post && post.post_body_text === req.body.post_body_text || post.post_title === req.body.post_title){
+      console.log("POST ============= ", post);
+      if(!post){
+        return next(
+          createError(HTTP.OK, [
+            {
+              status: RESPONSE.SUCCESS,
+              message: "Post Does Not Exist",
+              statusCode: HTTP.OK,
+              data: {},
+              code: HTTP.OK,
+            },
+          ])
+        );
+      }
+      if(post.post_body_text === req.body.post_body_text || post.post_title === req.body.post_title){
         return next(
           createError(HTTP.OK, [
             {
@@ -66,7 +80,7 @@ exports.updatePostInfo = async (req, res, next) => {
             ...req.body,
           };
           const postInCommunity = await new CommunityPostsService().update(
-            { original_post_id: req.body.post_id, poster_id: req.user.user_id },
+            { original_post_id: req.query.post_id, poster_id: req.user.user_id },
             dataToUpdateCommunity
           );
           return createResponse(`Post Updated`, updatedPost)(res, HTTP.OK);
