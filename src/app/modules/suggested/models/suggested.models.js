@@ -11,4 +11,4 @@ const schema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model('SuggestedModel', schema);
+module.exports = mongoose.model('SuggestedPostsModel', schema);
