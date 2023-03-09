@@ -3,6 +3,7 @@ const { authorize } = require("../../../middlewares/authorizeUser");
 const validateRequest = require("../../../middlewares/vallidate");
 
 const CreateComment = require('../../../modules/validators/comments/addComment.validator');
+const getCommentSchema = require('../../../modules/validators/comments/getComments.validator.js');
 const EditComment = require("../../validators/comments/editComment.validator");
 const DeleteComment = require("../../validators/comments/deleteComment.validator");
 const ReplyComment = require("../../validators/comments/reply.validator");
@@ -16,12 +17,19 @@ const DeleteCommentController = require('../controllers/deleteComment.controller
 const ReplyCommentController = require('../controllers/replyAComment.controllers');
 const AllCommentRepliesController = require('../controllers/getAllCommentsReplies.controller');
 const AllPostCommentsController = require('../controllers/getAPostsComents.controller');
+const GetCommentController = require('../controllers/getComments.controller')
 
 const router = Router();
+router.get(
+  '/:post_id',
+  validateRequest(getCommentSchema.getCommentSchema, 'body'),
+  GetCommentController.getComment
+);
+
 router.post(
   '/add-comment',
   authorize(['user','org']),
-  validateRequest(CreateComment.addCommentSchema, "body"),
+  validateRequest(CreateComment.addCommentSchema, 'body'),
   AddCommentController.createComment
 );
 
