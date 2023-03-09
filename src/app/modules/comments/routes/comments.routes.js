@@ -20,11 +20,6 @@ const AllPostCommentsController = require('../controllers/getAPostsComents.contr
 const GetCommentController = require('../controllers/getComments.controller')
 
 const router = Router();
-router.get(
-  '/:post_id',
-  validateRequest(getCommentSchema.getCommentSchema, 'body'),
-  GetCommentController.getComment
-);
 
 router.post(
   '/add-comment',
