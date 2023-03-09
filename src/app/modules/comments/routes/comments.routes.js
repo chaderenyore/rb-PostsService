@@ -17,8 +17,6 @@ const ReplyCommentController = require('../controllers/replyAComment.controllers
 const AllCommentRepliesController = require('../controllers/getAllCommentsReplies.controller');
 const AllPostCommentsController = require('../controllers/getAPostsComents.controller');
 
-
-
 const router = Router();
 router.post(
   '/add-comment',
@@ -33,7 +31,6 @@ router.post(
   validateRequest(EditComment.editCommentSchema, "body"),
   EditCommentController.editComment
 );
-
 router.delete(
   '/',
   authorize(['user','org']),
