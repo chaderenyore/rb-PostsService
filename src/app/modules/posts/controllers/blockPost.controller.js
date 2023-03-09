@@ -13,46 +13,65 @@ const logger = require("../../../../../logger.conf");
 exports.blockAPost = async (req, res, next) => {
   try {
     // check if same parameters where inputed
-      const post = await new PostsService().findAPost(
-        { post_id: req.body.post_id}
-      );
-      if (post) {
-        return next(
-          createError(HTTP.OK, [
-            {
-              status: RESPONSE.SUCCESS,
-              message: "Post Does Not Exist",
-              statusCode: HTTP.Ok,
-              data: {},
-              code: HTTP.Ok,
-            },
-          ])
-        );
-        } else {
-// search if posts is already blocked by user
-const isBlocked = await new BlockedPostsService().findAPost({blocker_id: req.user.user_id, post_id:req.query.post_id});
-if(isBlocked){
-    return next(
+    const post = await new CommunityPostsService().findAPost({
+      original_post_id: req.query.post_id,
+    });
+    if (!post) {
+      return next(
         createError(HTTP.OK, [
           {
             status: RESPONSE.SUCCESS,
-            message: "You Have Blocked This Posts Already",
+            message: "Post Does Not Exist",
             statusCode: HTTP.Ok,
             data: {},
             code: HTTP.Ok,
           },
         ])
       );
-} else {
-     //   save to user blocked posts
-const blockedPost = await new BlockedPostsService().create(
-    { poster_id: post.poster_id, post_id: post_id, blocker_id: req.user.user_id, block_narration: req.body.block_narration}
-  );
-        return createResponse(`You Blocked A Post}`,  blockedPost)(res, HTTP.OK);
-}
+    } else {
+      // check if its self post
+      if (post.poster_id === req.user.user_id) {
+        return next(
+          createError(HTTP.OK, [
+            {
+              status: RESPONSE.SUCCESS,
+              message: "You Cannot Block Your Created Post",
+              statusCode: HTTP.Ok,
+              data: {},
+              code: HTTP.Ok,
+            },
+          ])
+        );
+      }
+      // search if posts is already blocked by user
+      const isBlocked = await new BlockedPostsService().findAPost({
+        blocker_id: req.user.user_id,
+        post_id: req.query.post_id,
+      });
+      if (isBlocked) {
+        return next(
+          createError(HTTP.OK, [
+            {
+              status: RESPONSE.SUCCESS,
+              message: "You Have Blocked This Posts Already",
+              statusCode: HTTP.Ok,
+              data: {},
+              code: HTTP.Ok,
+            },
+          ])
+        );
+      } else {
+        //   save to user blocked posts
+        const blockedPost = await new BlockedPostsService().create({
+          poster_id: post.poster_id,
+          post_id: req.query.post_id,
+          blocker_id: req.user.user_id,
+          block_narration: req.body.block_narration || "",
+        });
+        return createResponse(`You Blocked A Post}`, blockedPost)(res, HTTP.OK);
       }
     }
-   catch (err) {
+  } catch (err) {
     logger.error(err);
     return next(createError.InternalServerError(err));
   }

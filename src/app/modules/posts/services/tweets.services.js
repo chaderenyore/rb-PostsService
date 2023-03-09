@@ -5,35 +5,35 @@ class TweetService {
     this.TweetsRepository = TweetsRepository;
   }
   
-  create(data) {
+  async create(data) {
     return this.TweetsRepository.create(data)
   }
 
-  findOne(query) {
+  async findOne(query) {
     return this.TweetsRepository.findOne(query);
   }
 
-  update(condition, update) {
+  async update(condition, update) {
     return this.TweetsRepository.update(condition, update)
   }
 
-  getAll(limit, page, data, selectedFields) {
+  async getAll(limit, page, data, selectedFields) {
    return this.TweetsRepository.all(limit, page, data, selectedFields)
 
   }
 
-  findById(id) {
+  async findById(id) {
     return this.TweetsRepository.findById(id)
   }
 
-  deletAll() {
+  async deletAll() {
     this.TweetsRepository.delete({})
   }
 
-  deletOne (condition) {
-    this.TweetsRepository.delete(condition)
+  async deletOne (condition) {
+    this.TweetsRepository.deleteOne(condition)
   }
-  updateMany(condition, update) {
+  async updateMany(condition, update) {
     return this.Model.updateMany(condition, update, {
       new: true,
       lean: true,

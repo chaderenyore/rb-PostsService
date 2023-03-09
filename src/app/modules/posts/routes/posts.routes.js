@@ -18,6 +18,9 @@ const SortPost = require("../../validators/posts/sortPosts.validator");
 const TweetPost = require("../../validators/posts/tweetPost.validator");
 const UploadPostMedia = require("../../validators/posts/uploadPostMedia.validators");
 const GetPostDetails = require("../../validators/posts/getAPostDetails.validator");
+const DeepSearchPosts = require("../../validators/posts/deepSearch.validator");
+
+
 // controllers
 const CreatePostController = require("../controllers/createAPosts.controller");
 const GetUserPostsController = require("../controllers/getUsersPosts.controller");
@@ -34,34 +37,39 @@ const SortPostController = require("../controllers/sortPosts.controller");
 const TweetPostController = require("../controllers/tweet.controller");
 const UploadPostMediaController = require("../controllers/uploadPostMedia.controller");
 const GetPostDetailsController = require("../controllers/getPostDetails.controller");
+const DeepSearchPostsController = require("../controllers/deepSearchPosts.controller");
 
 const uploadFile = require("../../../../_helpers/uploadFile");
 const KEYS = require("../../../../_config/keys");
 
 const router = Router();
+
 router.post(
   "/",
+  authorize(['user','org']),
   validateRequest(CreatePost.createPostsSchema, "body"),
   CreatePostController.createPost
 );
 
 router.get(
   "/",
-  validateRequest(GetUserPosts.getUsersPostsQuerySchema, "query"),
   authorize(['user','org']),
+  validateRequest(GetUserPosts.getUsersPostsQuerySchema, "query"),
   GetUserPostsController.getAUsersPosts
 );
+
 router.get(
-    "/:post_id",
-    validateRequest(GetPostDetails.getSinglePostSchema, "body"),
+    "/details/:post_id",
     authorize(['user','org']),
+    validateRequest(GetPostDetails.getSinglePostSchema, "params"),
     GetPostDetailsController.getPostDtails
   );
+
 router.put(
-  "/",
+  "/block",
   authorize(['user','org']),
   validateRequest(BlockPost.blockPostQuerySchema, "query"),
-BlockPostController.blockAPost
+  BlockPostController.blockAPost
 );
 
 router.post(
@@ -86,60 +94,68 @@ router.put(
 
   router.post(
     "/edit-post",
-    validateRequest(EditPost.updatePostsSchema, "query"),
     authorize(['user','org']),
+    validateRequest(EditPost.updatePostsQuerySchema, "query"),
+    validateRequest(EditPost.updatePostsBodySchema, "body"),
     EditPostController.updatePostInfo
   );
 
   router.post(
     "/filter",
-    validateRequest(FilterPost.searchSchema, "query"),
     authorize(['user','org']),
+    validateRequest(FilterPost.searchSchema, "query"),
     FilterPostController.filterPosts
   );
 
   router.get(
     "/community-posts",
-    validateRequest(CommunityPosts.getCommunityPostsQuerySchema, "query"),
     authorize(['user','org']),
+    validateRequest(CommunityPosts.getCommunityPostsQuerySchema, "query"),
     CommunityPostsController.getAllCommunityPostPosts
   );
 
   router.post(
     "/report-post",
-    validateRequest(ReportPost.reportPostsSchema, "body"),
     authorize(['user','org']),
+    validateRequest(ReportPost.reportPostsSchema, "body"),
     ReportPostController.reportAPost
   );
 
   router.post(
     "/re-post",
-    validateRequest(RepostPost.repostBodySchema, "body"),
     authorize(['user','org']),
+    validateRequest(RepostPost.repostBodySchema, "body"),
     RepostPostController.repost
   );
 
-  router.post(
+  router.get(
     "/sort",
-    validateRequest(SortPost.sortPostsByDateSchema, "query"),
     authorize(['user','org']),
+    validateRequest(SortPost.sortPostsByDateSchema, "query"),
     SortPostController.sortPosts
   );
 
   router.post(
     "/tweet-post",
-    validateRequest(TweetPost.tweetPostSchema, "body"),
     authorize(['user','org']),
+    validateRequest(TweetPost.tweetPostSchema, "body"),
     TweetPostController.tweetAPost
   );
 
   router.post(
     "/post-media",
     authorize(['user','org']),
-    validateRequest(UploadPostMedia.uploadPostMediaBodySchema, "body"),
     validateRequest(UploadPostMedia.uploadPostMediaQuerySchema, "query"),
+    validateRequest(UploadPostMedia.uploadPostMediaBodySchema, "body"),
     uploadFile("posts").single("post_media"),
     UploadPostMediaController.updatePostMedia
+  );
+
+  router.post(
+    "/search",
+    authorize(['user','org']),
+    validateRequest(DeepSearchPosts.deepSearchSchema, "query"),
+    DeepSearchPostsController.deepSearchPost
   );
 
 module.exports = router;

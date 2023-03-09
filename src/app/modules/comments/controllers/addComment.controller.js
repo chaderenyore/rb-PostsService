@@ -1,3 +1,5 @@
+const axios = require("axios").default;
+const { init_pusher } = require("../../../../_events/pusher")
 const { HTTP } = require('../../../../_constants/http');
 const { RESPONSE } = require('../../../../_constants/response');
 const createError = require('../../../../_helpers/createError');
@@ -7,13 +9,16 @@ const CommunityPostsService = require("../../posts/services/communityPosts.servi
 const RepostService = require("../../posts/services/repost.services");
 const TweetService = require("../../posts/services/tweets.services");
 const CommentService = require('../services/comments.services');
+const KEYS = require("../../../../_config/keys");
+
 // const logger = require('../../../../../logger.conf');
 
 exports.createComment = async (req, res, next) => {
   // Check the post type and add it accordingly
   try {
     // check if post exist
-   const post = new PostsService().findAPost({_id:req.body.post_id});
+   const post = await new PostsService().findAPost({_id:req.body.post_id});
+   console.log("POST =================== " , post);
    if(!post){
     return next(
       createError(HTTP.OK, [
@@ -28,7 +33,7 @@ exports.createComment = async (req, res, next) => {
     );
    } else {
           // Get user Info creating post
-          const user = await axios.post(
+          const user = await axios.get(
             `${KEYS.USER_SERVICE_URI}/users/v1/user/${req.user.user_id}?platform=web`,
             {
               headers: {
@@ -48,7 +53,7 @@ exports.createComment = async (req, res, next) => {
             }
                // create comment
     const dataToCommentModel = {
-      post_id: post.post_id,
+      post_id: post._id,
       commenter_id: req.user.user_id,
       is_parent: true,
       commenter_image: user.data.data.image ? user.data.data.image : "",
@@ -56,6 +61,7 @@ exports.createComment = async (req, res, next) => {
       commenter_username: user.data.data.username,
       comment_body_text: req.body.comment_body_text,
       post_type: "comment",
+      type: 'original'
     }
     const newComment = await new CommentService().createComment(dataToCommentModel);
     // update community
@@ -77,9 +83,10 @@ exports.createComment = async (req, res, next) => {
           { post_id: req.body.post_id },
           { $inc: { 'total_comments': 1 } }
         )
-        // Real time update frontend
-
        }
+      // Real time update frontend
+      const pusher = await init_pusher();
+      pusher.trigger("comments", dataToCommentModel);
       //  update post model
       const updatedPost = await new PostsService().update(
         { _id: req.body.post_id },

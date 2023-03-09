@@ -5,35 +5,35 @@ class ReportedPostsService {
     this.ReportedPostsRepository = ReportedPostsRepository;
   }
   
-  create(data) {
+  async create(data) {
     return this.ReportedPostsRepository.create(data)
   }
 
-  findARecord(query) {
+  async findARecord(query) {
     return this.ReportedPostsRepository.findOne(query);
   }
 
-  update(condition, update) {
+  async update(condition, update) {
     return this.ReportedPostsRepository.update(condition, update)
   }
 
-  getAll(limit, page, data, selectedFields) {
+  async getAll(limit, page, data, selectedFields) {
    return this.ReportedPostsRepository.all(limit, page, data, selectedFields)
 
   }
 
-  findById(id) {
+  async findById(id) {
     return this.ReportedPostsRepository.findById(id)
   }
 
-  deletAll() {
+  async deletAll() {
     this.ReportedPostsRepository.delete({})
   }
 
-  deletOne (condition) {
-    this.ReportedPostsRepository.delete(condition)
+  async deletOne (condition) {
+    this.ReportedPostsRepository.deleteOne(condition)
   }
-  updateMany(condition, update) {
+  async updateMany(condition, update) {
     return this.Model.updateMany(condition, update, {
       new: true,
       lean: true,

@@ -1,3 +1,4 @@
+const axios = require("axios").default;
 const { HTTP } = require("../../../../_constants/http");
 const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
@@ -5,6 +6,7 @@ const { createResponse } = require("../../../../_helpers/createResponse");
 const PostsService = require("../services/posts.services");
 const CommunityPostsService = require("../services/communityPosts.services");
 const TweetsService = require("../services/tweets.services");
+const KEYS = require("../../../../_config/keys");
 const logger = require("../../../../../logger.conf");
 
 exports.tweetAPost = async (req, res, next) => {
@@ -27,7 +29,7 @@ exports.tweetAPost = async (req, res, next) => {
       );
     } else {
       // Get user Info creating post
-      const user = await axios.post(
+      const user = await axios.get(
         `${KEYS.USER_SERVICE_URI}/users/v1/user/${req.user.user_id}?platform=web`,
         {
           headers: {
@@ -55,12 +57,11 @@ exports.tweetAPost = async (req, res, next) => {
           poster_username: user.data.data.username
             ? user.data.data.username
             : "",
+            post_child:post
         };
         const communityPost = await new CommunityPostsService().create(
           dataToCommunityPostModel
         );
-        // add child property to tweet
-        Tweet.child = post;
         // save post to post model for reference
         const dataToPostModel = {
           poster_id: post.poster_id,
@@ -75,7 +76,7 @@ exports.tweetAPost = async (req, res, next) => {
           post_child: post
         }
         const referencePost = await new PostsService().create(dataToPostModel);
-        return createResponse("You Tweeted A Post", Tweet)(res, HTTP.OK);
+        return createResponse("You Tweeted A Post", referencePost)(res, HTTP.OK);
       }
     }
   } catch (err) {

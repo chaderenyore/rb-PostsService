@@ -8,7 +8,6 @@ const RePostsService = require("../services/repost.services");
 const TweetPostsService = require("../services/tweets.services");
 const BlockedPostsService = require("../services/blockedPost.services");
 const RecycleBinService = require("../services/recycleBin.services");
-
 const logger = require("../../../../../logger.conf");
 
 exports.deletePost = async (req, res, next) => {
@@ -18,12 +17,13 @@ exports.deletePost = async (req, res, next) => {
       _id: req.query.post_id,
       poster_id: req.user.user_id,
     });
+    console.log("POST ==================== ", IsMyPost);
     if (!IsMyPost) {
       return next(
         createError(HTTP.UNAUTHORIZED, [
           {
             status: RESPONSE.ERROR,
-            message: "Unauthorized To Perform This Action",
+            message: "This Post Does No Exist/UnAuthorised",
             statusCode: HTTP.UNAUTHORIZED,
             data: null,
             code: HTTP.UNAUTHORIZED,
@@ -33,10 +33,17 @@ exports.deletePost = async (req, res, next) => {
     } else {
       // delete post
       const deletedPost = await new PostsService().deleteOne({
-        post_id: req.query.post_id,
+        _id: String(req.query.post_id),
+        poster_id: req.user.user_id,
       });
+      console.log("DELETEED  =================== ", deletedPost);
+      if (deletedPost) {
+        // console.log("DELETEED  =================== ", deletedPost);
+      }
       //    delete community
-      const deletedCommunity = await new CommunityPostsService().deletOne({original_post_id:req.query.post_id});
+      const deletedCommunity = await new CommunityPostsService().deletOne({
+        original_post_id: req.query.post_id,
+      });
       // update all tweets and repost of this post
       const updatedRePost = await new RePostsService().update(
         { post_id: req.body.post_id, poster_id: req.user.user_id },
@@ -52,9 +59,15 @@ exports.deletePost = async (req, res, next) => {
         { original_is_deleted: true }
       );
 
-          // save deleted posts in recycle bin
-    const bin = await new RecycleBinService().create({...deletedPost})
-    return createResponse(`Post Deleted`, bin)(res, HTTP.OK);
+      // save deleted posts in recycle bin
+      const dataToBin = {
+        post_id: IsMyPost._id,
+        deleted_by: "owner",
+        deleter_id: req.user.user_id,
+        ...IsMyPost
+      }
+      const bin = await new RecycleBinService().create(dataToBin);
+      return createResponse(`Post Deleted`, deletedPost)(res, HTTP.OK);
     }
   } catch (err) {
     logger.error(err);

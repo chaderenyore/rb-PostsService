@@ -5,35 +5,35 @@ class CommunityPostsService {
     this.CommunityPostsRepository = CommunityPostsRepository;
   }
   
-  create(data) {
+  async create(data) {
     return this.CommunityPostsRepository.create(data)
   }
 
-  findAPost(query) {
+  async findAPost(query) {
     return this.CommunityPostsRepository.findOne(query);
   }
 
-  update(condition, update) {
+  async update(condition, update) {
     return this.CommunityPostsRepository.update(condition, update)
   }
 
-  getAll(limit, page, data, selectedFields) {
+  async getAll(limit, page, data, selectedFields) {
    return this.CommunityPostsRepository.all(limit, page, data, selectedFields)
 
   }
 
-  findById(id) {
+  async findById(id) {
     return this.CommunityPostsRepository.findById(id)
   }
 
-  deletAll() {
-    this.CommunityPostsRepository.delete({})
+  async deletAll() {
+    return this.CommunityPostsRepository.delete({})
   }
 
-  deletOne (condition) {
-    this.CommunityPostsRepository.delete(condition)
+  async deletOne (condition) {
+    return this.CommunityPostsRepository.deleteOne(condition)
   }
-  updateMany(condition, update) {
+  async updateMany(condition, update) {
     return this.Model.updateMany(condition, update, {
       new: true,
       lean: true,
