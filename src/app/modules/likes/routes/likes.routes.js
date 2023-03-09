@@ -55,7 +55,7 @@ router.post(
   UnlikeACommentController.unLikeAComment
 );
 
-router.put(
+router.post(
     "/comments-likes/all",
     authorize(['user','org']),
     validateRequest( GetACommentsLikes.getCommentsLikesQuerySchema, "query"),
