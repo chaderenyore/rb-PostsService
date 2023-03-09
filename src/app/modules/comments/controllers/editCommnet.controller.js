@@ -4,7 +4,6 @@ const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
 const CommentService = require("../services/comments.services");
 
-
 const logger = require("../../../../../logger.conf");
 
 exports.editComment = async (req, res, next) => {
@@ -22,27 +21,44 @@ exports.editComment = async (req, res, next) => {
           },
         ])
       );
-    }
-    // check if comment exists
-      const updatedComment = await new CommentService().updateARecord(
-        {_id: req.body.comment_id },
-        {comment_body_text: req.body.comment_body_text, was_edited: true}
-      );
-      if (!updatedComment) {
+    } else {
+      const comment = new CommentService().findAComment({
+        _id: req.body.comment_id,
+      });
+      if (req.user.user_id !== comment.commenter_id) {
         return next(
-          createError(HTTP.BAD_REQUEST, [
+          createError(HTTP.UNAUTHORIZED, [
             {
-              status: RESPONSE.ERROR,
-              message: "This Comment Does Not Exist",
-              statusCode: HTTP.BAD_REQUEST,
+              status: RESPONSE.SUCCESS,
+              message: "User is not the same person as Commenter",
+              statusCode: HTTP.UNAUTHORIZED,
               data: {},
-              code: HTTP.BAD_REQUEST,
+              code: HTTP.UNAUTHORIZED,
             },
           ])
         );
       } else {
-        return createResponse(`Comment Edited`, updatedComment)(res, HTTP.OK);
+        const updatedComment = await new CommentService().updateARecord(
+          { _id: req.body.comment_id },
+          { comment_body_text: req.body.comment_body_text, was_edited: true }
+        );
+        if (!updatedComment) {
+          return next(
+            createError(HTTP.BAD_REQUEST, [
+              {
+                status: RESPONSE.ERROR,
+                message: "This Comment Does Not Exist",
+                statusCode: HTTP.BAD_REQUEST,
+                data: {},
+                code: HTTP.BAD_REQUEST,
+              },
+            ])
+          );
+        } else {
+          return createResponse(`Comment Edited`, updatedComment)(res, HTTP.OK);
+        }
       }
+    }
   } catch (err) {
     logger.error(err);
     return next(createError.InternalServerError(err));
