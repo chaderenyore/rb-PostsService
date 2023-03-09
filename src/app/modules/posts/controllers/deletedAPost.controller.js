@@ -60,7 +60,13 @@ exports.deletePost = async (req, res, next) => {
       );
 
       // save deleted posts in recycle bin
-      const bin = await new RecycleBinService().create({ ...deletedPost });
+      const dataToBin = {
+        post_id: IsMyPost._id,
+        deleted_by: "owner",
+        deleter_id: req.user.user_id,
+        ...IsMyPost
+      }
+      const bin = await new RecycleBinService().create(dataToBin);
       return createResponse(`Post Deleted`, deletedPost)(res, HTTP.OK);
     }
   } catch (err) {

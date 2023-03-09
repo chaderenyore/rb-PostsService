@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const schema = mongoose.Schema(
   {
+    post_id:{type: String},
     poster_id: String,
     poster_fullname: {type: String},
     poster_username: {type: String},
@@ -20,7 +21,9 @@ const schema = mongoose.Schema(
     is_banned: {type: Boolean, default:false},
     is_reported: {type: Boolean, default:false},
     report_narration: {type: String},
-    report_count: {type: Number, default: 0}
+    report_count: {type: Number, default: 0},
+    deleted_by: {type: String},
+    deleter_id:{type: String}
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },

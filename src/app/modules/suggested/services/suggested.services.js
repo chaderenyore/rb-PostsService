@@ -1,5 +1,4 @@
 const SuggestedRepository = require("../repository/suggested.repository");
-// const { message } = require("../../../../_constants/service.message");
 
 class SuggestedService {
   constructor() {
