@@ -9,7 +9,7 @@ const logger = require("../../../../../logger.conf");
 exports.getAllBannedPosts = async (req, res, next) => {
   try {
     // search for posts
-    const posts = await new BannedService().getAll(req.query.limit, req.query.page, queryData);
+    const posts = await new BannedService().getAll(req.query.limit, req.query.page, {});
     if (posts.data.length === 0) {
       return next(
         createError(HTTP.OK, [
@@ -22,8 +22,10 @@ exports.getAllBannedPosts = async (req, res, next) => {
           },
         ])
       );
-    }
+    } else {
       return createResponse("All Banned Posts Retrieved", posts)(res, HTTP.OK);
+       
+    }
     
   } catch (err) {
     logger.error(err);

@@ -52,7 +52,7 @@ exports.reportAPost = async (req, res, next) => {
       const reportedPost = await new PostsService().update(
         { _id: req.body.post_id },
         {
-          $inc: { report_count: 1 },
+          $inc: { 'report_count': 1 },
           is_reported: true,
           report_narration: req.body.report_narration,
         }
@@ -74,7 +74,7 @@ exports.reportAPost = async (req, res, next) => {
         const updatedCommunity = await new CommunityPostsService().update(
           { original_post_id: req.body.post_id, poster_id: req.user.user_id },
           {
-            $inc: { report_count: 1 },
+            $inc: { 'report_count': 1 },
             is_reported: true,
             report_narration: req.body.report_narration,
           }
