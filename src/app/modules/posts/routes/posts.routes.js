@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const { authorize } = require("../../../middlewares/authorizeUser");
+const { authorizeAdmin } = require("../../../middlewares/authorizeAdmin");
 const validateRequest = require("../../../middlewares/vallidate");
 
 // validators
@@ -19,7 +20,6 @@ const TweetPost = require("../../validators/posts/tweetPost.validator");
 const UploadPostMedia = require("../../validators/posts/uploadPostMedia.validators");
 const GetPostDetails = require("../../validators/posts/getAPostDetails.validator");
 const DeepSearchPosts = require("../../validators/posts/deepSearch.validator");
-
 
 // controllers
 const CreatePostController = require("../controllers/createAPosts.controller");
@@ -46,116 +46,121 @@ const router = Router();
 
 router.post(
   "/",
-  authorize(['user','org']),
+  authorize(["user", "org"]),
   validateRequest(CreatePost.createPostsSchema, "body"),
   CreatePostController.createPost
 );
 
 router.get(
   "/",
-  authorize(['user','org']),
+  authorize(["user", "org"]),
   validateRequest(GetUserPosts.getUsersPostsQuerySchema, "query"),
   GetUserPostsController.getAUsersPosts
 );
 
 router.get(
-    "/details/:post_id",
-    authorize(['user','org']),
-    validateRequest(GetPostDetails.getSinglePostSchema, "params"),
-    GetPostDetailsController.getPostDtails
-  );
+  "/details/:post_id",
+  authorize(["user", "org"]),
+  validateRequest(GetPostDetails.getSinglePostSchema, "params"),
+  GetPostDetailsController.getPostDtails
+);
 
 router.put(
   "/block",
-  authorize(['user','org']),
+  authorize(["user", "org"]),
   validateRequest(BlockPost.blockPostQuerySchema, "query"),
   BlockPostController.blockAPost
 );
 
 router.post(
   "/ban-post",
+  authorizeAdmin([
+    "super",
+    "admin",
+    "moderator",
+  ]),
   validateRequest(BanPost.banPostsSchema, "body"),
   BanPostController.bannPosts
 );
 
 router.put(
-    "/change-visibility",
-    authorize(['user','org']),
-    validateRequest(ChangePostVisibility.changePostVisibilitySchema, "query"),
-    ChangePostVisibilityController.changeVisibility
-  );
+  "/change-visibility",
+  authorize(["user", "org"]),
+  validateRequest(ChangePostVisibility.changePostVisibilitySchema, "query"),
+  ChangePostVisibilityController.changeVisibility
+);
 
-  router.delete(
-    "/",
-    authorize(['user','org']),
-    validateRequest(DeletePost.deletePostSchema, "query"),
-    DeletePostController.deletePost
-  );
+router.delete(
+  "/",
+  authorize(["user", "org"]),
+  validateRequest(DeletePost.deletePostSchema, "query"),
+  DeletePostController.deletePost
+);
 
-  router.post(
-    "/edit-post",
-    authorize(['user','org']),
-    validateRequest(EditPost.updatePostsQuerySchema, "query"),
-    validateRequest(EditPost.updatePostsBodySchema, "body"),
-    EditPostController.updatePostInfo
-  );
+router.post(
+  "/edit-post",
+  authorize(["user", "org"]),
+  validateRequest(EditPost.updatePostsQuerySchema, "query"),
+  validateRequest(EditPost.updatePostsBodySchema, "body"),
+  EditPostController.updatePostInfo
+);
 
-  router.post(
-    "/filter",
-    authorize(['user','org']),
-    validateRequest(FilterPost.searchSchema, "query"),
-    FilterPostController.filterPosts
-  );
+router.post(
+  "/filter",
+  authorize(["user", "org"]),
+  validateRequest(FilterPost.searchSchema, "query"),
+  FilterPostController.filterPosts
+);
 
-  router.get(
-    "/community-posts",
-    authorize(['user','org']),
-    validateRequest(CommunityPosts.getCommunityPostsQuerySchema, "query"),
-    CommunityPostsController.getAllCommunityPostPosts
-  );
+router.get(
+  "/community-posts",
+  authorize(["user", "org"]),
+  validateRequest(CommunityPosts.getCommunityPostsQuerySchema, "query"),
+  CommunityPostsController.getAllCommunityPostPosts
+);
 
-  router.post(
-    "/report-post",
-    authorize(['user','org']),
-    validateRequest(ReportPost.reportPostsSchema, "body"),
-    ReportPostController.reportAPost
-  );
+router.post(
+  "/report-post",
+  authorize(["user", "org"]),
+  validateRequest(ReportPost.reportPostsSchema, "body"),
+  ReportPostController.reportAPost
+);
 
-  router.post(
-    "/re-post",
-    authorize(['user','org']),
-    validateRequest(RepostPost.repostBodySchema, "body"),
-    RepostPostController.repost
-  );
+router.post(
+  "/re-post",
+  authorize(["user", "org"]),
+  validateRequest(RepostPost.repostBodySchema, "body"),
+  RepostPostController.repost
+);
 
-  router.get(
-    "/sort",
-    authorize(['user','org']),
-    validateRequest(SortPost.sortPostsByDateSchema, "query"),
-    SortPostController.sortPosts
-  );
+router.get(
+  "/sort",
+  authorize(["user", "org"]),
+  validateRequest(SortPost.sortPostsByDateSchema, "query"),
+  SortPostController.sortPosts
+);
 
-  router.post(
-    "/tweet-post",
-    authorize(['user','org']),
-    validateRequest(TweetPost.tweetPostSchema, "body"),
-    TweetPostController.tweetAPost
-  );
+router.post(
+  "/tweet-post",
+  authorize(["user", "org"]),
+  validateRequest(TweetPost.tweetPostSchema, "body"),
+  TweetPostController.tweetAPost
+);
 
-  router.post(
-    "/post-media",
-    authorize(['user','org']),
-    validateRequest(UploadPostMedia.uploadPostMediaQuerySchema, "query"),
-    validateRequest(UploadPostMedia.uploadPostMediaBodySchema, "body"),
-    uploadFile("posts").single("post_media"),
-    UploadPostMediaController.updatePostMedia
-  );
+router.post(
+  "/post-media",
+  authorize(["user", "org"]),
+  validateRequest(UploadPostMedia.uploadPostMediaQuerySchema, "query"),
+  validateRequest(UploadPostMedia.uploadPostMediaBodySchema, "body"),
+  uploadFile("posts").single("post_media"),
+  UploadPostMediaController.updatePostMedia
+);
 
-  router.post(
-    "/search",
-    authorize(['user','org']),
-    validateRequest(DeepSearchPosts.deepSearchSchema, "query"),
-    DeepSearchPostsController.deepSearchPost
-  );
+router.post(
+  "/search",
+  authorize(["user", "org"]),
+  validateRequest(DeepSearchPosts.deepSearchSchema, "query"),
+  DeepSearchPostsController.deepSearchPost
+);
 
 module.exports = router;
