@@ -54,9 +54,9 @@ router.get(
 );
 
 router.delete(
-  "/bulk",
+  "/bulk-delete",
   authorizeAdmin(["super", "admin", "moderator"]),
-  validateRequest(DeletePostValidator.deletePostsSchema, "query"),
+  validateRequest(DeletePostValidator.deletePostsSchema, "body"),
   DeletePostsController.bulkDeletePosts
 );
 
