@@ -50,7 +50,7 @@ exports.repost = async (req, res, next) => {
         const dataToPostModel = {
           poster_id: req.user.user_id,
           original_post_id: post._id,
-          reposter_id: req.user.user_di,
+          reposter_id: req.user.user_id,
           post_title: req.body.resposted_title,
           post_type: "repost",
           poster_image: user.data.data.image ? user.data.data.image : "",

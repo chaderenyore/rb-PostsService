@@ -8,12 +8,12 @@ const logger = require("../../../../../logger.conf");
 
 exports.updatePostMedia = async (req, res, next) => {
   try {
-    if (!req.file) {
+    if (!req.files) {
       return next(
         createError(HTTP.BAD_REQUEST, [
           {
             status: RESPONSE.ERROR,
-            message: "Please specify a file to upload.",
+            message: "Please specify file/files to upload.",
             statusCode: HTTP.BAD_REQUEST,
             data: null,
             code: HTTP.BAD_REQUEST,
@@ -22,23 +22,14 @@ exports.updatePostMedia = async (req, res, next) => {
       );
     } else {
        // build data to send
-  let dataToUpdate;
-  let media;
-  if(req.query.media_type === "video"){
-    dataToUpdate = {
-       post_video: req.file?.location 
-    };
-    media = {
-      post_video: req.file?.location
-    };
+  const dataFiles = [];
+  console.log("FILES UPLOAED ====== ", req.files)
+  for(let i = 0 ; i < req.files.length; i++){
+    dataFiles.push(req.files[i].location)
   }
-  if(req.query.media_type === "image"){
-    dataToUpdate = {
-       post_image: req.file?.location
-    };
-    media = {
-       post_image: req.file?.location 
-    }
+  
+  let dataToUpdate = {
+    post_media: dataFiles
   }
   // update post and community posts
   await new CommunityPostsService().update(
@@ -49,7 +40,7 @@ exports.updatePostMedia = async (req, res, next) => {
       { poster_id: req.user.user_id, _id: req.query.post_id },
       dataToUpdate
     );
-    return createResponse("Post Media Uploaded", media)(
+    return createResponse("Post Media Uploaded", req.files)(
       res,
       HTTP.OK
     );
