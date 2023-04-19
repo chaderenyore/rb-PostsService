@@ -152,7 +152,7 @@ router.post(
   authorize(["user", "org"]),
   validateRequest(UploadPostMedia.uploadPostMediaQuerySchema, "query"),
   validateRequest(UploadPostMedia.uploadPostMediaBodySchema, "body"),
-  uploadFile("posts").single("post_media"),
+  uploadFile("posts").array("post_media"),
   UploadPostMediaController.updatePostMedia
 );
 

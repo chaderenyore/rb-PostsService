@@ -42,6 +42,9 @@ function defaultFunction(directory) {
       },
     }),
     fileFilter: fileFilter,
+    limits: {
+      fileSize: 20 * 1024 * 1024, // limit file size to 5MB
+    },
   });
   return upload;
 }

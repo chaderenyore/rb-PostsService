@@ -34,7 +34,6 @@ exports.bannPosts = async (req, res, next) => {
           ])
         );
       } else {
-        console.log("IDS ============ ", ids[0]);
         const deletedUserPosts = await new PostsService().deleteOne({
           _id: String(ids[i]),
         });
@@ -55,7 +54,6 @@ exports.bannPosts = async (req, res, next) => {
           const deletedPost = await new CommunityPostsService().deletOne({
             original_post_id: ids[i],
           });
-          console.log("DELETED COMMUNITY PPOSTS ===", deletedPost);
           // update tweets and reposted
           const updatedRePost = await new RePostsService().update(
             { post_id: ids[i] },
@@ -73,7 +71,7 @@ exports.bannPosts = async (req, res, next) => {
           //    save to banned posts
           const dataToBannedPosts = {
             poster_fullname: post.poster_fullname,
-            poster_username: post.poster_username,
+            poster_username: String(post.poster_username),
             poster_image: post.post_image,
             post_title: post.post_title,
             post_body_text: post.post_body_text,
@@ -92,10 +90,9 @@ exports.bannPosts = async (req, res, next) => {
             has_tweets: post.has_tweets,
             has_reposts: post.has_reposts,
           };
-          const bannedPost = await new BannedPostsService().create({
+          const bannedPost = await new BannedPostsService().create(
             dataToBannedPosts,
-          });
-          console.log(bannedPost);
+          );
           deletedPosts.push(bannedPost);
         }
       }

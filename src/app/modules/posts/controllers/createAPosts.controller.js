@@ -12,10 +12,8 @@ const KEYS = require("../../../../_config/keys");
 
 exports.createPost = async (req, res, next) => {
   try {
-    // console.log("REQ USER========================", req.user)
     //  filter banned words from title and text
     const { error, message} =  filterBannedWords(req.body.post_title, req.body.post_body_text);
-    console.log(error)
    if (error) {
     return next(
       createError(HTTP.OK, [
@@ -42,11 +40,12 @@ exports.createPost = async (req, res, next) => {
            // create post
            let firstname;
            let fullname;
-           if(user.data.data.first_name && user.data.data.firstname !== " "){
-            firstname = user.data.data.firstname;
+           if(user.data.data.first_name && user.data.data.first_name !== " "){
+            firstname = user.data.data.first_name;
             fullname = firstname;
            }
            if(user.data.data.last_name && user.data.data.last_name !== " "){
+            firstname = user.data.data.first_name;
             fullname = `${firstname} ${user.data.data.last_name}`
            }
     const dataToPostModel = {
@@ -60,7 +59,6 @@ exports.createPost = async (req, res, next) => {
     // create post record
     const newPost = await new PostService().create(dataToPostModel);
     if(newPost){
-      console.log("NEWPOST ================== ", newPost);
       const dataToCommunityPostModel = {
         poster_id: req.user.user_id,
         original_post_id: newPost._id,
@@ -72,9 +70,7 @@ exports.createPost = async (req, res, next) => {
       }
       // create community post
      const communityPost = await new CommunityPostService().create(dataToCommunityPostModel);
-     console.log("Community Post ======= ", communityPost);
     }
-    console.log("New Post : ========= : ", newPost);
     return createResponse("Post Created", newPost)(res, HTTP.OK);
       } else {
         return next(

@@ -30,9 +30,6 @@ exports.getAllCommunityPostPosts = async (req, res, next) => {
         ])
       );
     } else {
-      console.log("COMMUNITY POSTS ================= ", posts);
-      // console.log("COMMUNITY POSTS ================= ", posts.data);
-      // console.log("COMMUNITY POSTS ================= ", posts.data.length);
     // get users blocked posts ids
     const usersBlockedPosts = await new BlockedPostsService().getAll({blocker_id: req.user.user_id});
     // console.log("User Blocked Post ============= ", usersBlockedPosts);
