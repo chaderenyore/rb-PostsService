@@ -40,10 +40,6 @@ exports.getAUsersPosts = async (req, res, next) => {
         queryData
       );
     }
-    console.log("POSTS =================== ", posts);
-    console.log("POSTS DATA =================== ", posts.data);
-    console.log("POSTS LENTTHG =================== ", posts.data.length);
-
     if (posts && posts.data && posts.data.length === 0) {
       return next(
         createError(HTTP.OK, [

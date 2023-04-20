@@ -23,7 +23,6 @@ exports.updatePostMedia = async (req, res, next) => {
     } else {
        // build data to send
   const dataFiles = [];
-  console.log("FILES UPLOAED ====== ", req.files)
   for(let i = 0 ; i < req.files.length; i++){
     dataFiles.push(req.files[i].location)
   }
@@ -40,7 +39,7 @@ exports.updatePostMedia = async (req, res, next) => {
       { poster_id: req.user.user_id, _id: req.query.post_id },
       dataToUpdate
     );
-    return createResponse("Post Media Uploaded", req.files)(
+    return createResponse("Post Media Uploaded", dataFiles)(
       res,
       HTTP.OK
     );

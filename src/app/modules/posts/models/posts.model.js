@@ -4,6 +4,7 @@ const schema = mongoose.Schema(
   {
     poster_id: String,
     original_post_id: {type: String},
+    community_id: {type: String},
     poster_fullname: {type: String},
     poster_username: {type: String},
     poster_image: {type: String},
