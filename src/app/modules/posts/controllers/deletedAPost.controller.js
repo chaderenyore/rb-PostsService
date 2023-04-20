@@ -12,12 +12,10 @@ const logger = require("../../../../../logger.conf");
 
 exports.deletePost = async (req, res, next) => {
   try {
-    //  checkif user owns the post
-    const IsMyPost = await new PostsService().findAPost({
-      _id: req.query.post_id,
-      poster_id: req.user.user_id,
-    });
-    console.log("POST ==================== ", IsMyPost);
+    //  check if user owns the post
+    const IsMyPost = await new PostsService().findAPost(
+        { 'community_id': req.query.community_id, 'poster_id': req.user.user_id },
+    );
     if (!IsMyPost) {
       return next(
         createError(HTTP.UNAUTHORIZED, [
@@ -31,43 +29,39 @@ exports.deletePost = async (req, res, next) => {
         ])
       );
     } else {
-      // delete post
-      const deletedPost = await new PostsService().deleteOne({
-        _id: String(req.query.post_id),
-        poster_id: req.user.user_id,
-      });
-      console.log("DELETEED  =================== ", deletedPost);
+      // delete base post by type
+      const deletedPost = await new PostsService().deleteOne(
+          { 'community_id': req.query.community_id, 'poster_id': req.user.user_id });
       if (deletedPost) {
-        // console.log("DELETEED  =================== ", deletedPost);
-      }
-      //    delete community
-      const deletedCommunity = await new CommunityPostsService().deletOne({
-        original_post_id: req.query.post_id,
-      });
-      // update all tweets and repost of this post
-      const updatedRePost = await new RePostsService().update(
-        { post_id: req.body.post_id, poster_id: req.user.user_id },
-        { original_is_deleted: true }
-      );
-      const updatedTweetsPost = await new TweetPostsService().update(
-        { post_id: req.body.post_id, poster_id: req.user.user_id },
-        { original_is_deleted: true }
-      );
+        //    delete community
+        const deletedCommunity = await new CommunityPostsService().deletOne(
+            { '_id': req.query.community_id, 'poster_id': req.user.user_id },
+        );
+        // update all tweets and repost of this post
+        const updatedRePost = await new RePostsService().update(
+          { post_id: req.query.community_id, poster_id: req.user.user_id },
+          { original_is_deleted: true }
+        );
+        const updatedTweetsPost = await new TweetPostsService().update(
+          { post_id:req.query.community_id, poster_id: req.user.user_id },
+          { original_is_deleted: true }
+        );
 
-      const updatedBlockedPost = await new BlockedPostsService().update(
-        { post_id: req.body.post_id, poster_id: req.user.user_id },
-        { original_is_deleted: true }
-      );
+        const updatedBlockedPost = await new BlockedPostsService().update(
+          { post_id: req.query.community_id, poster_id: req.user.user_id },
+          { original_is_deleted: true }
+        );
 
-      // save deleted posts in recycle bin
-      const dataToBin = {
-        post_id: IsMyPost._id,
-        deleted_by: "owner",
-        deleter_id: req.user.user_id,
-        ...IsMyPost
+        // save deleted posts in recycle bin
+        const dataToBin = {
+          post_id: IsMyPost._id,
+          deleted_by: "owner",
+          deleter_id: req.user.user_id,
+          ...IsMyPost,
+        };
+        const bin = await new RecycleBinService().create(dataToBin);
+        return createResponse(`Post Deleted`, deletedPost)(res, HTTP.OK);
       }
-      const bin = await new RecycleBinService().create(dataToBin);
-      return createResponse(`Post Deleted`, deletedPost)(res, HTTP.OK);
     }
   } catch (err) {
     logger.error(err);
