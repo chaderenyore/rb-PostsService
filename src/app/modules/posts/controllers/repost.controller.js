@@ -13,7 +13,7 @@ exports.repost = async (req, res, next) => {
   try {
     // check if post exist
     const post = await new PostsService().findAPost({
-      _id: req.body.original_post_id,
+      community_id: req.body.community_id,
     });
     if (!post) {
       return next(
@@ -59,7 +59,7 @@ exports.repost = async (req, res, next) => {
         const RePost = await new RePostsService().create(dataToRePostModel);
         // save to community
         const dataToCommunityPostModel = {
-          poster_id: post.poster_id,
+          poster_id: req.user.user_id,
           original_post_id: post._id,
           reposter_id: req.user.user_id,
           post_title: req.body.reposted_title || "",
@@ -93,10 +93,31 @@ exports.repost = async (req, res, next) => {
           const referencePost = await new PostsService().create(
             dataToPostModel
           );
+          // increment number or repost on original post
+          const originalBasePost = await new PostsService().update(
+            { community_id: req.body.community_id },
+            { $inc: { 'total_times_reposted': 1 } }
+          );
+          const originalComunityPost = await new CommunityPostsService().update(
+            { _id: req.body.community_id },
+            { $inc: { 'total_times_reposted': 1 } }
+          )
           return createResponse(
             "You Successfully Reposted A Post",
             referencePost
           )(res, HTTP.OK);
+        } else {
+          return next(
+            createError(HTTP.OK, [
+              {
+                status: RESPONSE.SUCCESS,
+                message: "Unexpected Error",
+                statusCode: HTTP.OK,
+                data: null,
+                code: HTTP.OK,
+              },
+            ])
+          );
         }
       }
     }
