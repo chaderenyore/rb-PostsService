@@ -6,6 +6,7 @@ const schema = mongoose.Schema(
     post_id: String,
     twiter_id: {type: String},
     tweet_title: {type: String},
+    tweet_body_text: {type: String},
     total_likes: {type: Number, default: 0},
     total_comments: {type: Number, default: 0},
     was_edited: {type: Boolean, default: false},

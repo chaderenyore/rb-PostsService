@@ -13,9 +13,10 @@ const logger = require("../../../../../logger.conf");
 exports.deletePost = async (req, res, next) => {
   try {
     //  check if user owns the post
-    const IsMyPost = await new PostsService().findAPost(
-        { 'community_id': req.query.community_id, 'poster_id': req.user.user_id },
-    );
+    const IsMyPost = await new PostsService().findAPost({
+      community_id: req.query.community_id,
+      poster_id: req.user.user_id,
+    });
     if (!IsMyPost) {
       return next(
         createError(HTTP.UNAUTHORIZED, [
@@ -30,20 +31,27 @@ exports.deletePost = async (req, res, next) => {
       );
     } else {
       // delete base post by type
-      const deletedPost = await new PostsService().deleteOne(
-          { 'community_id': req.query.community_id, 'poster_id': req.user.user_id });
+      const deletedPost = await new PostsService().deleteOne({
+        community_id: req.query.community_id,
+        poster_id: req.user.user_id,
+      });
       if (deletedPost) {
         //    delete community
-        const deletedCommunity = await new CommunityPostsService().deletOne(
-            { '_id': req.query.community_id, 'poster_id': req.user.user_id },
-        );
+        const deletedCommunity = await new CommunityPostsService().deletOne({
+          _id: String(req.query.community_id),
+          poster_id: req.user.user_id,
+        });
+        console.log("COMMUNITY POST ========== ", deletedCommunity);
+        console.log("USER ID ========== ", req.user.user_id);
+        console.log("QUERY   ========== ", req.query.community_id);
+
         // update all tweets and repost of this post
         const updatedRePost = await new RePostsService().update(
           { post_id: req.query.community_id, poster_id: req.user.user_id },
           { original_is_deleted: true }
         );
         const updatedTweetsPost = await new TweetPostsService().update(
-          { post_id:req.query.community_id, poster_id: req.user.user_id },
+          { post_id: req.query.community_id, poster_id: req.user.user_id },
           { original_is_deleted: true }
         );
 

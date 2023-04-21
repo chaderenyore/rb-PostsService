@@ -13,7 +13,7 @@ exports.tweetAPost = async (req, res, next) => {
   try {
     // search if usr owns post
     const post = await new PostsService().findAPost({
-      _id: req.body.original_post_id,
+      community_id: req.body.community_id,
     });
     if (!post) {
       return next(
@@ -48,23 +48,26 @@ exports.tweetAPost = async (req, res, next) => {
         const Tweet = await new TweetsService().create(dataToTweetModel);
         // save to community
         const dataToCommunityPostModel = {
-          poster_id: post.poster_id,
+          poster_id: req.user.user_id,
           original_post_id: post._id,
           reposter_id: req.user.user_di,
-          post_title: req.body.resposted_title,
+          post_title: req.body.tweet_title || "",
+          post_body_text: req.body.tweet_body_text || "",
           post_type: "tweet",
           poster_image: user.data.data.image ? user.data.data.image : "",
           poster_username: user.data.data.username
             ? user.data.data.username
             : "",
-            post_child:post
+          post_child: post,
         };
         const communityPost = await new CommunityPostsService().create(
           dataToCommunityPostModel
         );
-        // save post to post model for reference
+        if(communityPost){
+                  // save post to post model for reference
         const dataToPostModel = {
-          poster_id: post.poster_id,
+          community_id: communityPost._id,
+          poster_id: req.user.user_id,
           original_post_id: post._id,
           reposter_id: req.user.user_di,
           post_title: req.body.resposted_title,
@@ -73,10 +76,35 @@ exports.tweetAPost = async (req, res, next) => {
           poster_username: user.data.data.username
             ? user.data.data.username
             : "",
-          post_child: post
-        }
+          post_child: post,
+        };
         const referencePost = await new PostsService().create(dataToPostModel);
-        return createResponse("You Tweeted A Post", referencePost)(res, HTTP.OK);
+        // increment number or repost on original post
+        const originalBasePost = await new PostsService().update(
+          { community_id: req.body.community_id },
+          { $inc: { 'total_posts_tweets': 1 } }
+        );
+        const originalComunityPost = await new CommunityPostsService().update(
+          { _id: req.body.community_id },
+          { $inc: { 'total_posts_tweets': 1 } }
+        );
+        return createResponse("You Tweeted A Post", referencePost)(
+          res,
+          HTTP.OK
+        );
+        }else {
+          return next(
+            createError(HTTP.OK, [
+              {
+                status: RESPONSE.SUCCESS,
+                message: "Unexpected Error",
+                statusCode: HTTP.OK,
+                data: null,
+                code: HTTP.OK,
+              },
+            ])
+          );
+        }
       }
     }
   } catch (err) {

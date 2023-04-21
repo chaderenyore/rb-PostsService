@@ -6,6 +6,7 @@ const schema = mongoose.Schema(
     post_id: String,
     reposter_id: {type: String},
     repposted_title: {type: String},
+    reposted_body_text: {type: String},
     total_likes: {type: Number, default: 0},
     total_comments: {type: Number, default: 0},
     total_times_reposted: {type: Number, default: 0},
