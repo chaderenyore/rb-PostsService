@@ -6,10 +6,10 @@ const CommentLikesConsumer = new Connnection(
   KEYS.AMQP_URI,
   KEYS.UPDATE_USER_POST_COMMENTS_LIKES_DETAILS,
   async (msg) => {
-    const channel = CommentLikesConsumer.getChannel();
+    const channel = await CommentLikesConsumer.getChannel();
     if (msg !== null) {
       const message = msg.content.toString();
-      console.info(` [x] Consumed : ${message}`);
+      console.info(` [x] Consumed : ${message} on ${KEYS.UPDATE_USER_POST_COMMENTS_LIKES_DETAILS}`);
 
       const { id, bodyData } = JSON.parse(message);
       console.log("BODY DATA ====== ", bodyData);
@@ -28,8 +28,11 @@ const CommentLikesConsumer = new Connnection(
         return channel.ack(msg);
       }
     }
-
-    return null;
+    process.on('exit', (code) => {
+      channel.close();
+      console.log(`Closing ${channel} channel`);
+   });
+    // return null;
   }
 );
 

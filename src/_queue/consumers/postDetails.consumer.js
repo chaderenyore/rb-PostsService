@@ -9,7 +9,7 @@ const PostDetailsConsumer = new Connnection(
   KEYS.AMQP_URI,
   KEYS.UPDATE_USER_POST_DETAILS,
   async (msg) => {
-    const channel = PostDetailsConsumer.getChannel();
+    const channel = await PostDetailsConsumer.getChannel();
     if (msg !== null) {
       const message = msg.content.toString();
       console.info(` [x] Consumed : ${message}`);
@@ -39,8 +39,11 @@ const PostDetailsConsumer = new Connnection(
         return channel.ack(msg);
       }
     }
-
-    return null;
+    process.on('exit', (code) => {
+      channel.close();
+      console.log(`Closing ${channel} channel`);
+   });
+    // return null;
   }
 );
 

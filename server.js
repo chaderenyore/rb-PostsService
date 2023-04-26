@@ -24,9 +24,10 @@ mongoose
       
     });
   }).catch(error => console.log(error));
-
-CommentsLikesConsumer.consume("Update Comment Likes");
-CommmnetRepliesConsumer.consume("Update Comment Replies");
-PostsComentsConsumer.consume("Update Post Comments");
-PostDetailsConsumer.consume("Update Posts Details");
-PostsLikesConsumer.consume("Update Posts Likes");
+(exports._initQueue = async() => {
+  await CommentsLikesConsumer.consume("Update Comment Likes");
+  await CommmnetRepliesConsumer.consume("Update Comment Replies");
+  await PostsComentsConsumer.consume("Update Post Comments");
+  await PostDetailsConsumer.consume("Update Posts Details");
+  await PostsLikesConsumer.consume("Update Posts Likes");
+})()
