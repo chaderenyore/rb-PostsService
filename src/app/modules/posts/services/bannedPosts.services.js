@@ -34,10 +34,7 @@ class BannedPostsService {
     this.BannedPostsRepository.deleteOne(condition)
   }
   async updateMany(condition, update) {
-    return this.Model.updateMany(condition, update, {
-      new: true,
-      lean: true,
-    });
+    return this.BannedPostsRepository.updateMany(condition, update);
   }
 }
 

@@ -32,8 +32,6 @@ exports.getAllCommunityPostPosts = async (req, res, next) => {
     } else {
     // get users blocked posts ids
     const usersBlockedPosts = await new BlockedPostsService().getAll({blocker_id: req.user.user_id});
-    // console.log("User Blocked Post ============= ", usersBlockedPosts);
-    console.log("User Blocked Post ============= ", usersBlockedPosts.data);
 
     for(let i = 0; i < usersBlockedPosts.data.length; i++){
       usersBlockedPostsIds.push(usersBlockedPosts.data[i].post_id)
@@ -44,7 +42,6 @@ exports.getAllCommunityPostPosts = async (req, res, next) => {
       allPosts.push(posts.data[post]);
     }
   }
-  console.log("ALL POSTS ================= ", allPosts);
   for(let post = 0; post < allPosts.length; post++){
     if(allPosts[post].post_type === "original"){
       filterPosts.push(allPosts[post]);

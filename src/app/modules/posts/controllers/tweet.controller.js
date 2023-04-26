@@ -38,14 +38,15 @@ exports.tweetAPost = async (req, res, next) => {
         }
       );
       if (user && user.data && user.data.code === 200) {
-        //  save to users repost
-        const dataToTweetModel = {
-          poster_id: post.poster_id,
-          post_id: post._id,
-          twiter_id: req.user.user_id,
-          tweet_title: req.body.tweet_title,
-        };
-        const Tweet = await new TweetsService().create(dataToTweetModel);
+        let fullname;
+        if (user.data.data.first_name && user.data.data.first_name !== " ") {
+          firstname = user.data.data.first_name;
+          fullname = firstname;
+        }
+        if (user.data.data.last_name && user.data.data.last_name !== " ") {
+          firstname = user.data.data.first_name;
+          fullname = `${firstname} ${user.data.data.last_name}`;
+        }
         // save to community
         const dataToCommunityPostModel = {
           poster_id: req.user.user_id,
@@ -58,13 +59,24 @@ exports.tweetAPost = async (req, res, next) => {
           poster_username: user.data.data.username
             ? user.data.data.username
             : "",
+          poster_fullname:fullname,
           post_child: post,
         };
         const communityPost = await new CommunityPostsService().create(
           dataToCommunityPostModel
         );
         if(communityPost){
-                  // save post to post model for reference
+        //  save to users repost
+        const dataToTweetModel = {
+          community_id: communityPost._id,
+          poster_id: post.poster_id,
+          post_id: post._id,
+          poster_fullname: fullname,
+          twiter_id: req.user.user_id,
+          tweet_title: req.body.tweet_title,
+        };
+        const Tweet = await new TweetsService().create(dataToTweetModel);
+        // save post to post model for reference
         const dataToPostModel = {
           community_id: communityPost._id,
           poster_id: req.user.user_id,

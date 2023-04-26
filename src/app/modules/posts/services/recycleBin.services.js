@@ -27,17 +27,14 @@ class RecycleBinService {
   }
 
   async deletAll() {
-    this.RecycleBinRepository.delete({})
+    return this.RecycleBinRepository.delete({})
   }
 
   async deletOne (condition) {
-    this.RecycleBinRepository.deleteOne(condition)
+    return this.RecycleBinRepository.deleteOne(condition)
   }
   async updateMany(condition, update) {
-    return this.Model.updateMany(condition, update, {
-      new: true,
-      lean: true,
-    });
+    return this.RecycleBinRepository.updateMany(condition, update);
   }
 }
 

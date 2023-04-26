@@ -13,12 +13,12 @@ exports.filterBannedWords =  (title, body) => {
   for(let i = 0; i < BannedWords.length; i++){
    if (title && titleArray.includes(BannedWords[i])) {
      error = true;
-     message = " Banned Words Detected";
+     message = "Banned Words Detected";
      break;
     }
     if (bodyArray.includes(BannedWords[i])) {
       error = true;
-      message = " Banned Words Detected";
+      message = "Banned Words Detected";
       break;
     }
   }

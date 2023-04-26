@@ -55,6 +55,12 @@ class Repository {
       lean: true,
     });
   }
+  updateMany (condition, update) {
+    return this.Model.updateMany(condition, update, {
+      new: true,
+      lean: true,
+    });
+  }
 }
 
 module.exports = Repository;

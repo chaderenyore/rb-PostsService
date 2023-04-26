@@ -4,6 +4,7 @@ const schema = mongoose.Schema(
   {
     poster_id: String,
     post_id: String,
+    community_id:String,
     reposter_id: {type: String},
     repposted_title: {type: String},
     reposted_body_text: {type: String},

@@ -11,7 +11,7 @@ const KEYS = require("../../../../../_config/keys");
 exports.likeAComment = async (req, res, next) => {
   try {
           // check if like exists
-          const likeExist = await new CommentLikeService().findARecord({
+      const likeExist = await new CommentLikeService().findARecord({
             comment_id: req.query.comment_id,
             user_id: req.user.user_id,
           });
@@ -28,7 +28,7 @@ exports.likeAComment = async (req, res, next) => {
               ])
             );
           }
-    // search if user owns post
+    // search if comment exists
     const comment = await new CommentsService().findAComment({
       _id: req.query.comment_id,
     });

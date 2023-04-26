@@ -16,6 +16,9 @@ class CommentsService {
     return this.CommentsRepository.update(condition, update);
   }
 
+  async updateMany(condition, update) {
+    return this.CommentsRepository.updateMany(condition, update);
+  }
   async GetAllComments(limit, page, data, selectedFields) {
     return this.CommentsRepository.all(limit, page, data, selectedFields);
   }

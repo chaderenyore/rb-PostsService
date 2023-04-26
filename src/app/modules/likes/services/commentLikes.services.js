@@ -16,6 +16,9 @@ class ComentLikesService {
   async updateARecord(condition, update) {
     return this.CommentLikesRepository.update(condition, update)
   }
+  async updateMany(condition, update) {
+    return this.CommentLikesRepository.updateMany(condition, update);
+  }
 
   async GetAllRecords(limit, page, data, selectedFields) {
    return this.CommentLikesRepository.all(limit, page, data, selectedFields)
