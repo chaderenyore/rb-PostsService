@@ -38,10 +38,7 @@ class BlockedPostsService {
     this.BlockedPostsRepository.deleteOne(condition)
   }
   async updateMany(condition, update) {
-    return this.Model.updateMany(condition, update, {
-      new: true,
-      lean: true,
-    });
+    return this.BlockedPostsRepository.updateMany(condition, update);
   }
 }
 

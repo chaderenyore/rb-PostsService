@@ -27,17 +27,14 @@ class ReportedPostsService {
   }
 
   async deletAll() {
-    this.ReportedPostsRepository.delete({})
+   return this.ReportedPostsRepository.delete({})
   }
 
   async deletOne (condition) {
-    this.ReportedPostsRepository.deleteOne(condition)
+    return this.ReportedPostsRepository.deleteOne(condition)
   }
   async updateMany(condition, update) {
-    return this.Model.updateMany(condition, update, {
-      new: true,
-      lean: true,
-    });
+    return this.ReportedPostsRepository.updateMany(condition, update);
   }
 }
 

@@ -85,8 +85,8 @@ exports.createComment = async (req, res, next) => {
         )
        }
       // Real time update frontend
-      const pusher = await init_pusher();
-      pusher.trigger("comments", dataToCommentModel);
+      // const pusher = await init_pusher();
+      // pusher.trigger("comments", dataToCommentModel);
       //  update post model
       const updatedPost = await new PostsService().update(
         { _id: req.body.post_id },

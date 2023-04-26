@@ -7,5 +7,5 @@ exports.updatePostsBodySchema = Joi.object().keys({
 });
 
 exports.updatePostsQuerySchema = Joi.object().keys({
-  post_id: Joi.objectId().required(),
+  community_id: Joi.objectId().required(),
 });

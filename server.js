@@ -7,14 +7,7 @@ const CommmnetRepliesConsumer = require("./src/_queue/consumers/commentReplies.c
 const PostsComentsConsumer = require("./src/_queue/consumers/postComments.consumer");
 const PostDetailsConsumer = require("./src/_queue/consumers/postDetails.consumer");
 const PostsLikesConsumer = require("./src/_queue/consumers/postLikes.consumer");
-
-
-CommentsLikesConsumer.consume("Update Comment Likes");
-CommmnetRepliesConsumer.consume("Update Comment Replies");
-PostsComentsConsumer.consume("Update Post Comments");
-PostDetailsConsumer.consume("Update Posts Details");
-PostsLikesConsumer.consume("Update Posts Likes");
-
+// require('./src/_queue/consumers');
 
 mongoose.set('strictQuery', true);
 mongoose
@@ -31,3 +24,9 @@ mongoose
       
     });
   }).catch(error => console.log(error));
+
+CommentsLikesConsumer.consume("Update Comment Likes");
+CommmnetRepliesConsumer.consume("Update Comment Replies");
+PostsComentsConsumer.consume("Update Post Comments");
+PostDetailsConsumer.consume("Update Posts Details");
+PostsLikesConsumer.consume("Update Posts Likes");

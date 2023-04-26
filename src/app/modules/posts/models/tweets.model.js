@@ -4,7 +4,9 @@ const schema = mongoose.Schema(
   {
     poster_id: String,
     post_id: String,
+    community_id: String,
     twiter_id: {type: String},
+    poster_fullname: {type:String},
     tweet_title: {type: String},
     tweet_body_text: {type: String},
     total_likes: {type: Number, default: 0},

@@ -34,10 +34,7 @@ class CommunityPostsService {
     return this.CommunityPostsRepository.deleteOne(condition)
   }
   async updateMany(condition, update) {
-    return this.Model.updateMany(condition, update, {
-      new: true,
-      lean: true,
-    });
+    return this.CommunityPostsRepository.updateMany(condition, update);
   }
 }
 

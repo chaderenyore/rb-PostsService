@@ -9,7 +9,7 @@ exports.getAPostLikes = async (req, res, next) => {
   try {
     // query data
     const dataToQuery = {
-        post_id: req.query.original_post_id
+      community_id: req.query.community_id
     } 
     const likes = await new PostLikeService().GetAllRecords(req.query.limit, req.query.page, dataToQuery);
     if (likes.data.length === 0) {

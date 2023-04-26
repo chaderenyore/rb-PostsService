@@ -27,17 +27,14 @@ class TweetService {
   }
 
   async deletAll() {
-    this.TweetsRepository.delete({})
+    return this.TweetsRepository.delete({})
   }
 
   async deletOne (condition) {
-    this.TweetsRepository.deleteOne(condition)
+    return this.TweetsRepository.deleteOne(condition)
   }
   async updateMany(condition, update) {
-    return this.Model.updateMany(condition, update, {
-      new: true,
-      lean: true,
-    });
+    return this.TweetsRepository.updateMany(condition, update);
   }
 }
 

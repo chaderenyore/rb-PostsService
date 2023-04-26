@@ -6,7 +6,6 @@ exports.bannedWords = () => {
         "fuckkkkkkk",
         "fock",
         "fockkkkkkkkkkkkkk",
-        "fool",
         "idiot",
         "scam",
         "stupid",

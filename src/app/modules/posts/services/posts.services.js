@@ -34,10 +34,7 @@ class PostsService {
     return this.PostsRepository.deleteOne(condition)
   }
   async updateMany(condition, update) {
-    return this.Model.updateMany(condition, update, {
-      new: true,
-      lean: true,
-    });
+    return this.PostsRepository.updateMany(condition, update);
   }
 }
 

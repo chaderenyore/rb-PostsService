@@ -9,6 +9,7 @@ const GetAPostLikes = require("../../validators/likes/posts/getAllPostsLikes.val
 const LikeAComment = require("../../validators/likes/comments/likeComent.validator");
 const UnlikeAComment = require("../../validators/likes/comments/unlikeCommnent.validator");
 const GetACommentsLikes = require("../../validators/likes/comments/getAllCommentLikes.validator");
+const ValidateLikes = require("../../validators/likes/validateLike.validators");
 
 // controllers
 const LikeAPostController = require("../controllers/posts/like.controller");
@@ -17,6 +18,7 @@ const GetAllPostsLikesController = require("../controllers/posts/getAllLikes.con
 const LikeACommentController = require("../controllers/comments/like.controller");
 const GetAllCOmmentLikesController = require("../controllers/comments/getAllLikes.controller");
 const UnlikeACommentController = require("../controllers/comments/unlike.controller");
+const ValidateLikewController = require("../controllers/validateLikes");
 
 const router = Router();
 
@@ -60,6 +62,13 @@ router.post(
     authorize(['user','org']),
     validateRequest( GetACommentsLikes.getCommentsLikesQuerySchema, "query"),
     GetAllCOmmentLikesController.getACommentLikes
+  );
+
+router.post(
+    "/validate",
+    authorize(['user','org']),
+    validateRequest(ValidateLikes.validateLikeQuerySchema, "query"),
+    ValidateLikewController.validateLike
   );
 
 

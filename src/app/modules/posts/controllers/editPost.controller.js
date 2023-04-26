@@ -25,7 +25,7 @@ exports.updatePostInfo = async (req, res, next) => {
       );
     } else {
       // fetch post and compare titles and body text
-      const post = await new PostsService().findAPost({_id: req.query.post_id, poster_id: req.user.user_id});
+      const post = await new PostsService().findAPost({community_id: req.query.community_id, poster_id: req.user.user_id});
       console.log("POST ============= ", post);
       if(!post){
         return next(
@@ -40,7 +40,7 @@ exports.updatePostInfo = async (req, res, next) => {
           ])
         );
       }
-      if(post.post_body_text === req.body.post_body_text || post.post_title === req.body.post_title){
+      if(post.post_body_text === req.body.post_body_text && post.post_title === req.body.post_title){
         return next(
           createError(HTTP.OK, [
             {
@@ -52,13 +52,38 @@ exports.updatePostInfo = async (req, res, next) => {
             },
           ])
         );
-      } else {
+      } else if(req.body.post_title && post.post_title === req.body.post_title ){
+        return next(
+          createError(HTTP.OK, [
+            {
+              status: RESPONSE.SUCCESS,
+              message: "Title is same with current change",
+              statusCode: HTTP.OK,
+              data: {},
+              code: HTTP.OK,
+            },
+          ])
+        );
+      } else if(req.body.post_body_text && post.post_body_text === req.body.post_body_text ){
+        return next(
+          createError(HTTP.OK, [
+            {
+              status: RESPONSE.SUCCESS,
+              message: "Body is same with current change",
+              statusCode: HTTP.OK,
+              data: {},
+              code: HTTP.OK,
+            },
+          ])
+        );
+      }
+       else {
         const dataToUpdatePost = {
           was_edited: true,
           ...req.body,
         };
         const updatedPost = await new PostsService().update(
-          { _id: req.query.post_id, poster_id: req.user.user_id },
+          { community_id: req.query.community_id, poster_id: req.user.user_id },
           dataToUpdatePost
         );
         if (!updatedPost) {
@@ -80,7 +105,17 @@ exports.updatePostInfo = async (req, res, next) => {
             ...req.body,
           };
           const postInCommunity = await new CommunityPostsService().update(
-            { original_post_id: req.query.post_id, poster_id: req.user.user_id },
+            { community_id: req.query.community_id, poster_id: req.user.user_id },
+            dataToUpdateCommunity
+          );
+
+          const postInRepost = await new RePostsService().update(
+            { community_id: req.query.community_id},
+            dataToUpdateCommunity
+          );
+
+          const postInTweets = await new TweetPostsService().update(
+            { community_id: req.query.community_id},
             dataToUpdateCommunity
           );
           return createResponse(`Post Updated`, updatedPost)(res, HTTP.OK);

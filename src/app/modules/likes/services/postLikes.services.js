@@ -17,6 +17,9 @@ class PostLikesService {
     return this.PostLikesRepository.update(condition, update)
   }
 
+async updateMany(condition, update) {
+    return this.PostLikesRepository.updateMany(condition, update);
+  }
   async GetAllRecords(limit, page, data, selectedFields) {
    return this.PostLikesRepository.all(limit, page, data, selectedFields)
 

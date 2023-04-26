@@ -49,14 +49,6 @@ exports.repost = async (req, res, next) => {
           firstname = user.data.data.first_name;
           fullname = `${firstname} ${user.data.data.last_name}`;
         }
-        //  save to users repost
-        const dataToRePostModel = {
-          poster_id: post.poster_id,
-          post_id: post._id,
-          reposter_id: req.user.user_id,
-          repposted_title: req.body.resposted_title,
-        };
-        const RePost = await new RePostsService().create(dataToRePostModel);
         // save to community
         const dataToCommunityPostModel = {
           poster_id: req.user.user_id,
@@ -77,6 +69,15 @@ exports.repost = async (req, res, next) => {
         );
         // save post to post model for reference
         if (communityPost) {
+      //  save to users repost
+        const dataToRePostModel = {
+          community_id: communityPost._id,
+          poster_id: post.poster_id,
+          post_id: post._id,
+          reposter_id: req.user.user_id,
+          repposted_title: req.body.resposted_title,
+        };
+        const RePost = await new RePostsService().create(dataToRePostModel);
           const dataToPostModel = {
             community_id: communityPost._id,
             poster_id: req.user.user_id,
