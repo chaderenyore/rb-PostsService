@@ -6,7 +6,7 @@ const PostsLikesConsumer = new Connnection(
   KEYS.AMQP_URI,
   KEYS.UPDATE_USER_POST_LIKE_DETAILS,
   async (msg) => {
-    const channel = PostsLikesConsumer.getChannel();
+    const channel = await PostsLikesConsumer.getChannel();
     if (msg !== null) {
       const message = msg.content.toString();
       console.info(` [x] Consumed : ${message}`);
@@ -28,8 +28,11 @@ const PostsLikesConsumer = new Connnection(
         return channel.ack(msg);
       }
     }
-
-    return null;
+    process.on('exit', (code) => {
+      channel.close();
+      console.log(`Closing ${channel} channel`);
+   });
+    // return null;
   }
 );
 
