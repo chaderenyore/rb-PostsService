@@ -26,7 +26,7 @@ exports.getAllPostComments = async (req, res, next) => {
       );
     } else {
       // get all commnets
-      const comments = await new CommentService().GetAllRecords(
+      const comments = await new CommentService().GetAllComments(
         req.query.limit,
         req.query.page,
         { post_id: req.query.post_id }

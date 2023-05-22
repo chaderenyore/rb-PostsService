@@ -48,27 +48,27 @@ exports.tweetAPost = async (req, res, next) => {
           fullname = `${firstname} ${user.data.data.last_name}`;
         }
         // save to community
-        const dataToCommunityPostModel = {
-          poster_id: req.user.user_id,
-          original_post_id: post._id,
-          reposter_id: req.user.user_di,
-          post_title: req.body.tweet_title || "",
-          post_body_text: req.body.tweet_body_text || "",
-          post_type: "tweet",
-          poster_image: user.data.data.image ? user.data.data.image : "",
-          poster_username: user.data.data.username
-            ? user.data.data.username
-            : "",
-          poster_fullname:fullname,
-          post_child: post,
-        };
-        const communityPost = await new CommunityPostsService().create(
-          dataToCommunityPostModel
-        );
-        if(communityPost){
+        // const dataToCommunityPostModel = {
+        //   poster_id: req.user.user_id,
+        //   original_post_id: post._id,
+        //   reposter_id: req.user.user_di,
+        //   post_title: req.body.tweet_title || "",
+        //   post_body_text: req.body.tweet_body_text || "",
+        //   post_type: "tweet",
+        //   poster_image: user.data.data.image ? user.data.data.image : "",
+        //   poster_username: user.data.data.username
+        //     ? user.data.data.username
+        //     : "",
+        //   poster_fullname:fullname,
+        //   post_child: post,
+        // };
+        // const communityPost = await new CommunityPostsService().create(
+        //   dataToCommunityPostModel
+        // );
+        // if(communityPost){
         //  save to users repost
         const dataToTweetModel = {
-          community_id: communityPost._id,
+          // community_id: communityPost._id,
           poster_id: post.poster_id,
           post_id: post._id,
           poster_fullname: fullname,
@@ -78,7 +78,7 @@ exports.tweetAPost = async (req, res, next) => {
         const Tweet = await new TweetsService().create(dataToTweetModel);
         // save post to post model for reference
         const dataToPostModel = {
-          community_id: communityPost._id,
+          // community_id: communityPost._id,
           poster_id: req.user.user_id,
           original_post_id: post._id,
           reposter_id: req.user.user_di,
@@ -104,19 +104,19 @@ exports.tweetAPost = async (req, res, next) => {
           res,
           HTTP.OK
         );
-        }else {
-          return next(
-            createError(HTTP.OK, [
-              {
-                status: RESPONSE.SUCCESS,
-                message: "Unexpected Error",
-                statusCode: HTTP.OK,
-                data: null,
-                code: HTTP.OK,
-              },
-            ])
-          );
-        }
+        // }else {
+        //   return next(
+        //     createError(HTTP.OK, [
+        //       {
+        //         status: RESPONSE.SUCCESS,
+        //         message: "Unexpected Error",
+        //         statusCode: HTTP.OK,
+        //         data: null,
+        //         code: HTTP.OK,
+        //       },
+        //     ])
+        //   );
+        // }
       }
     }
   } catch (err) {

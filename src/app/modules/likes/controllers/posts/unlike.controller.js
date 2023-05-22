@@ -38,7 +38,7 @@ exports.unLikeAPost = async (req, res, next) => {
             createError(HTTP.OK, [
               {
                 status: RESPONSE.SUCCESS,
-                message: "You Have Not LIke This Post",
+                message: "You Have Not Liked This Post",
                 statusCode: HTTP.OK,
                 data: null,
                 code: HTTP.OK,
