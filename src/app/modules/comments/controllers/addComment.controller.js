@@ -18,7 +18,6 @@ exports.createComment = async (req, res, next) => {
   try {
     // check if post exist
    const post = await new PostsService().findAPost({_id:req.body.post_id});
-   console.log("POST =================== " , post);
    if(!post){
     return next(
       createError(HTTP.OK, [
@@ -44,11 +43,12 @@ exports.createComment = async (req, res, next) => {
           if (user && user.data && user.data.code === 200) {
             let firstname;
             let fullname;
-            if(user.data.data.first_name && user.data.data.firstname !== " "){
-             firstname = user.data.data.firstname;
+            if(user.data.data.first_name && user.data.data.first_name !== " "){
+             firstname = user.data.data.first_name;
              fullname = firstname;
             }
             if(user.data.data.last_name && user.data.data.last_name !== " "){
+              firstname = user.data.data.first_name;
              fullname = `${firstname} ${user.data.data.last_name}`
             }
                // create comment
@@ -64,6 +64,7 @@ exports.createComment = async (req, res, next) => {
       type: 'original'
     }
     const newComment = await new CommentService().createComment(dataToCommentModel);
+    console.log("NEW COMMENT ======== ", newComment);
     // update community
     const updatedCommunity = await new CommunityPostsService().update(
       { original_post_id: req.body.post_id },

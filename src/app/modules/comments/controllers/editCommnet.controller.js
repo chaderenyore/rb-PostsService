@@ -22,7 +22,7 @@ exports.editComment = async (req, res, next) => {
         ])
       );
     } else {
-      const comment = new CommentService().findAComment({
+      const comment = await new CommentService().findAComment({
         _id: req.body.comment_id,
       });
       if (req.user.user_id !== comment.commenter_id) {
