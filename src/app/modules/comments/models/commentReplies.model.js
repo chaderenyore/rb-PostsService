@@ -9,7 +9,7 @@ const schema = mongoose.Schema(
     user_username: {type: String},
     reply_body_text: {type: String},
     total_likes: {type: String, default:0, minimum: 0},
-    total_replies: {type: String, default: 0, minimum: 0},
+    total_replies: {type: Number, default: 0, minimum: 0},
     was_edited: {type: Boolean, default: false},
     post_type: {type: String, enum :['reply']},
   },

@@ -2,17 +2,13 @@ const { HTTP } = require("../../../../_constants/http");
 const { RESPONSE } = require("../../../../_constants/response");
 const createError = require("../../../../_helpers/createError");
 const { createResponse } = require("../../../../_helpers/createResponse");
-const PostsService = require("../../posts/services/posts.services");
+const ReportedPostsService = require("../../posts/services/reportedPosts.services");
 
 const logger = require("../../../../../logger.conf");
 
 exports.getAllReportedPosts = async (req, res, next) => {
   try {
-    // search for posts reported
-    const queryData = {
-        is_reported: true
-    }
-    const posts = await new PostsService().getAll(req.query.limit, req.query.page, queryData);
+    const posts = await new ReportedPostsService().getAll(req.query.limit, req.query.page);
     if (posts.data.length === 0) {
       return next(
         createError(HTTP.OK, [

@@ -20,6 +20,8 @@ const TweetPost = require("../../validators/posts/tweetPost.validator");
 const UploadPostMedia = require("../../validators/posts/uploadPostMedia.validators");
 const GetPostDetails = require("../../validators/posts/getAPostDetails.validator");
 const DeepSearchPosts = require("../../validators/posts/deepSearch.validator");
+const FilterPostsByCoinMention = require("../../validators/posts/searchByCoinMention.validator");
+
 
 // controllers
 const CreatePostController = require("../controllers/createAPosts.controller");
@@ -38,6 +40,8 @@ const TweetPostController = require("../controllers/tweet.controller");
 const UploadPostMediaController = require("../controllers/uploadPostMedia.controller");
 const GetPostDetailsController = require("../controllers/getPostDetails.controller");
 const DeepSearchPostsController = require("../controllers/deepSearchPosts.controller");
+const FilterPostsByCoinController = require("../controllers/searchCommunityByCoinMention.controller");
+
 
 const uploadFile = require("../../../../_helpers/uploadFile");
 const KEYS = require("../../../../_config/keys");
@@ -161,6 +165,13 @@ router.post(
   authorize(["user", "org"]),
   validateRequest(DeepSearchPosts.deepSearchSchema, "query"),
   DeepSearchPostsController.deepSearchPost
+);
+
+router.get(
+  "/filterbycoin",
+  authorize(["user", "org"]),
+  validateRequest(FilterPostsByCoinMention.searchByCoinMentionQuerySchema, "query"),
+  FilterPostsByCoinController.searchPostsByCoinMention
 );
 
 module.exports = router;

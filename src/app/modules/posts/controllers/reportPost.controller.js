@@ -90,7 +90,11 @@ exports.reportAPost = async (req, res, next) => {
         //   save reported posts
         const redportedPost = await new ReportedPostsService().create({
           post_id: req.body.post_id,
+          post_body: reportedPost.post_body_text,
+          post_title:reportedPost.post_title,
+          post_media: reportedPost.post_media,
           reporter_id: req.user.user_id,
+          reporter_username: req.user.username ? req.user.username : "",
           report_narration: req.body.report_narration,
         });
         return createResponse(`You Reported A Post`, reportedPost)(
