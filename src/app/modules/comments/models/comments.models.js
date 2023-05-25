@@ -14,7 +14,7 @@ const schema = mongoose.Schema(
     commenter_username: {type: String},
     comment_body_text: {type: String},
     total_likes: {type: Number, minimum: 0},
-    total_replies: {type: String, default: 0, minimum: 0},
+    total_replies: {type: Number, default: 0, minimum: 0},
     was_edited: {type: Boolean, default: false},
     post_type: {type: String, enum :['comment']},
     imageUrl: {type: String}
