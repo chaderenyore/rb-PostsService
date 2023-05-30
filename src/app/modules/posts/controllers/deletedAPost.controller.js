@@ -8,6 +8,7 @@ const RePostsService = require("../services/repost.services");
 const TweetPostsService = require("../services/tweets.services");
 const BlockedPostsService = require("../services/blockedPost.services");
 const RecycleBinService = require("../services/recycleBin.services");
+const PublishToUpdateUserQueue = require("../../../../_queue/publishers/updateUserDetails.publisher");
 const logger = require("../../../../../logger.conf");
 
 exports.deletePost = async (req, res, next) => {
@@ -41,9 +42,6 @@ exports.deletePost = async (req, res, next) => {
           _id: String(req.query.community_id),
           poster_id: req.user.user_id,
         });
-        console.log("COMMUNITY POST ========== ", deletedCommunity);
-        console.log("USER ID ========== ", req.user.user_id);
-        console.log("QUERY   ========== ", req.query.community_id);
 
         // update all tweets and repost of this post
         const updatedRePost = await new RePostsService().update(
@@ -68,6 +66,11 @@ exports.deletePost = async (req, res, next) => {
           ...IsMyPost,
         };
         const bin = await new RecycleBinService().create(dataToBin);
+              // publsih decrement to user details queue
+              await PublishToUpdateUserQueue.publishToUpdateUserQueue(
+                req.user.user_id,
+                { $inc: { 'total_public_post': -1 } }
+              );
         return createResponse(`Post Deleted`, deletedPost)(res, HTTP.OK);
       }
     }
