@@ -21,6 +21,8 @@ const UploadPostMedia = require("../../validators/posts/uploadPostMedia.validato
 const GetPostDetails = require("../../validators/posts/getAPostDetails.validator");
 const DeepSearchPosts = require("../../validators/posts/deepSearch.validator");
 const FilterPostsByCoinMention = require("../../validators/posts/searchByCoinMention.validator");
+const FetchUsersPublicPosts = require("../../validators/posts/fetchUsersPublicPosts.validator");
+
 
 
 // controllers
@@ -41,6 +43,8 @@ const UploadPostMediaController = require("../controllers/uploadPostMedia.contro
 const GetPostDetailsController = require("../controllers/getPostDetails.controller");
 const DeepSearchPostsController = require("../controllers/deepSearchPosts.controller");
 const FilterPostsByCoinController = require("../controllers/searchCommunityByCoinMention.controller");
+const FetchUsersPublicPostsController = require("../controllers/fetchUserPublicPosts.controller");
+
 
 
 const uploadFile = require("../../../../_helpers/uploadFile");
@@ -172,6 +176,13 @@ router.get(
   authorize(["user", "org"]),
   validateRequest(FilterPostsByCoinMention.searchByCoinMentionQuerySchema, "query"),
   FilterPostsByCoinController.searchPostsByCoinMention
+);
+
+router.get(
+  "/user/public",
+  authorize(["user", "org"]),
+  validateRequest(FetchUsersPublicPosts.getCommunityPostsQuerySchema, "query"),
+  FetchUsersPublicPostsController.fetchUsersPublicPosts
 );
 
 module.exports = router;

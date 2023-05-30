@@ -7,6 +7,7 @@ const PostService = require("../services/posts.services");
 const CommunityPostService = require("../services/communityPosts.services");
 const logger = require("../../../../../logger.conf");
 const { filterBannedWords } = require("../../../../_helpers/filterBannedWords");
+const PublishToUpdateUserQueue = require("../../../../_queue/publishers/updateUserDetails.publisher");
 const KEYS = require("../../../../_config/keys");
 
 exports.createPost = async (req, res, next) => {
@@ -89,6 +90,11 @@ exports.createPost = async (req, res, next) => {
             };
             const updatedPost = await new PostService().update(filter, update);
             if (updatedPost) {
+              // // publsih increment to user details queue
+              await PublishToUpdateUserQueue.publishToUpdateUserQueue(
+                req.user.user_id,
+                { $inc: { 'total_public_post': 1 } }
+              );
               return createResponse("Post Created", updatedPost)(res, HTTP.OK);
             }
           }
