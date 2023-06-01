@@ -9,6 +9,7 @@ const CommunityPostsService = require("../../posts/services/communityPosts.servi
 const RepostService = require("../../posts/services/repost.services");
 const TweetService = require("../../posts/services/tweets.services");
 const CommentService = require('../services/comments.services');
+const InAppNotificationQueue = require("../../../../_queue/publishers/inAppNotification.publishers");
 const KEYS = require("../../../../_config/keys");
 
 // const logger = require('../../../../../logger.conf');
@@ -85,6 +86,21 @@ exports.createComment = async (req, res, next) => {
           { $inc: { 'total_comments': 1 } }
         )
        }
+
+        // publish to InApp Notificaton
+        // build data
+        const dataToInnAppQueue = {
+          user_id: post.poster_id,
+          notification_type: 'comment',
+          message: `${user.data.data.username} just commented on Your Post`,
+          notifier_image:user.data.data.image ? user.data.data.image : "",
+          notifier_username: user.data.data.username,
+          notifier_fullname: `${fullname}`,
+          origin_service: 'Posts',
+          origin_platform: req.query.platform
+        }
+        // publish here
+        await InAppNotificationQueue.publishInAppNotifcation(post.poster_id, dataToInnAppQueue);
       // Real time update frontend
       // const pusher = await init_pusher();
       // pusher.trigger("comments", dataToCommentModel);
