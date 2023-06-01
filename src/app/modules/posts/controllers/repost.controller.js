@@ -6,6 +6,7 @@ const { createResponse } = require("../../../../_helpers/createResponse");
 const PostsService = require("../services/posts.services");
 const CommunityPostsService = require("../services/communityPosts.services");
 const RePostsService = require("../services/repost.services");
+const InAppNotificationQueue = require("../../../../_queue/publishers/inAppNotification.publishers");
 const KEYS = require("../../../../_config/keys");
 const logger = require("../../../../../logger.conf");
 
@@ -102,7 +103,21 @@ exports.repost = async (req, res, next) => {
           const originalComunityPost = await new CommunityPostsService().update(
             { _id: req.body.community_id },
             { $inc: { 'total_times_reposted': 1 } }
-          )
+          );
+        // publish to InApp Notificaton
+        // build data
+        const dataToInnAppQueue = {
+          user_id: post.poster_id,
+          notification_type: 'repost',
+          message: `${user.data.data.username} just shared/reposted Your Post`,
+          notifier_image:user.data.data.image ? user.data.data.image : "",
+          notifier_username: user.data.data.username,
+          notifier_fullname: `${fullname}`,
+          origin_service: 'Posts',
+          origin_platform: req.query.platform
+        }
+        // publish here
+        await InAppNotificationQueue.publishInAppNotifcation(post.poster_id, dataToInnAppQueue);
           return createResponse(
             "You Successfully Reposted A Post",
             referencePost

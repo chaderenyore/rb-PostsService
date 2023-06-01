@@ -6,6 +6,7 @@ const { createResponse } = require("../../../../_helpers/createResponse");
 const PostsService = require("../../posts/services/posts.services");
 const CommentService = require("../services/comments.services");
 const ReplyService = require("../services/reply.service");
+const InAppNotificationQueue = require("../../../../_queue/publishers/inAppNotification.publishers");
 
 const KEYS = require("../../../../_config/keys");
 
@@ -68,6 +69,20 @@ exports.replyAComment = async (req, res, next) => {
           { _id: comment._id },
           { $inc: { 'total_replies': 1 } }
         );
+               // publish to InApp Notificaton
+        // build data
+        const dataToInnAppQueue = {
+          user_id: comment.commenter_id,
+          notification_type: 'reply',
+          message: `${user.data.data.username} just replied Your Comment`,
+          notifier_image:user.data.data.image ? user.data.data.image : "",
+          notifier_username: user.data.data.username,
+          notifier_fullname: `${fullname}`,
+          origin_service: 'Posts',
+          origin_platform: req.query.platform
+        }
+        // publish here
+        await InAppNotificationQueue.publishInAppNotifcation(comment.commenter_id, dataToInnAppQueue);
         return createResponse(`Replied A Comment Successfuly`, newCommentReply)(res, HTTP.OK);
         } else {
             return next(
