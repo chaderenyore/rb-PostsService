@@ -21,6 +21,10 @@ class Connnection {
     const consumer = await channel.consume(this.queue, (msg) => {
       this.onMessage(msg);
     });
+    // handle Error
+    this.conn.on("error", async (err) => {
+      console.log(`AMQP errored ${err}`);
+    });
     return consumer;
   }
 

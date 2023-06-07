@@ -86,7 +86,8 @@ exports.createComment = async (req, res, next) => {
           { $inc: { 'total_comments': 1 } }
         )
        }
-
+     //check if psoter is not owner fo posts
+     if(post.poster_id !== req.user.user_id){
         // publish to InApp Notificaton
         // build data
         const dataToInnAppQueue = {
@@ -101,6 +102,7 @@ exports.createComment = async (req, res, next) => {
         }
         // publish here
         await InAppNotificationQueue.publishInAppNotifcation(post.poster_id, dataToInnAppQueue);
+     }
       // Real time update frontend
       // const pusher = await init_pusher();
       // pusher.trigger("comments", dataToCommentModel);
