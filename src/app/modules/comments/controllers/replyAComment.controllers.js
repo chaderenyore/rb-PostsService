@@ -69,7 +69,9 @@ exports.replyAComment = async (req, res, next) => {
           { _id: comment._id },
           { $inc: { 'total_replies': 1 } }
         );
-               // publish to InApp Notificaton
+
+        if(comment.commenter_id !== req.user.user_id){
+                    // publish to InApp Notificaton
         // build data
         const dataToInnAppQueue = {
           user_id: comment.commenter_id,
@@ -83,6 +85,7 @@ exports.replyAComment = async (req, res, next) => {
         }
         // publish here
         await InAppNotificationQueue.publishInAppNotifcation(comment.commenter_id, dataToInnAppQueue);
+        }
         return createResponse(`Replied A Comment Successfuly`, newCommentReply)(res, HTTP.OK);
         } else {
             return next(
