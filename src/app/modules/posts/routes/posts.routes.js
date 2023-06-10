@@ -22,6 +22,7 @@ const GetPostDetails = require("../../validators/posts/getAPostDetails.validator
 const DeepSearchPosts = require("../../validators/posts/deepSearch.validator");
 const FilterPostsByCoinMention = require("../../validators/posts/searchByCoinMention.validator");
 const FetchUsersPublicPosts = require("../../validators/posts/fetchUsersPublicPosts.validator");
+const GlobalSearchPosts = require("../../validators/posts/globalSearch.validator");
 
 
 
@@ -44,6 +45,7 @@ const GetPostDetailsController = require("../controllers/getPostDetails.controll
 const DeepSearchPostsController = require("../controllers/deepSearchPosts.controller");
 const FilterPostsByCoinController = require("../controllers/searchCommunityByCoinMention.controller");
 const FetchUsersPublicPostsController = require("../controllers/fetchUserPublicPosts.controller");
+const GlobalSearchPostsController = require("../controllers/globalSearchCommunity");
 
 
 
@@ -183,6 +185,13 @@ router.get(
   authorize(["user", "org"]),
   validateRequest(FetchUsersPublicPosts.getCommunityPostsQuerySchema, "query"),
   FetchUsersPublicPostsController.fetchUsersPublicPosts
+);
+
+router.get(
+  "/communityglobalsearch",
+  authorize(["user", "org"]),
+  validateRequest(GlobalSearchPosts.globalQuerySchema, "query"),
+  GlobalSearchPostsController.globalSearchCommunityPosts
 );
 
 module.exports = router;
