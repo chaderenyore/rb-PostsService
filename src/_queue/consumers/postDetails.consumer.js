@@ -19,30 +19,65 @@ const PostDetailsConsumer = new Connnection(
       try {
         //    update records here
         if (bodyData.imageUrl) {
-          const updatedCommunityRecords =
-            await new CommunityService().updateMany(
-              { poster_id: id },
-              { poster_image: bodyData.imageUrl }
-            );
-            console.log("Community Posts ====== ", updatedCommunityRecords);
-          const updatedPostsRecords = await new PostDetailsService().updateMany(
+          await new CommunityService().updateMany(
             { poster_id: id },
             { poster_image: bodyData.imageUrl }
           );
-
-          console.log("Posts ====== ", updatedPostsRecords);
-
+          await new PostDetailsService().updateMany(
+            { poster_id: id },
+            { poster_image: bodyData.imageUrl }
+          );
           return channel.ack(msg);
+        } else {
+          if (bodyData.fullName && !bodyData.username) {
+            await new CommunityService().updateMany(
+              { poster_id: id },
+              { poster_fullname: bodyData.fullName }
+            );
+            await new PostDetailsService().updateMany(
+              { poster_id: id },
+              { poster_fullname: bodyData.fullName }
+            );
+            return channel.ack(msg);
+          }
+          if (bodyData.username && !bodyData.fullName) {
+            await new CommunityService().updateMany(
+              { poster_id: id },
+              { poster_username: bodyData.username }
+            );
+            await new PostDetailsService().updateMany(
+              { poster_id: id },
+              { poster_username: bodyData.username }
+            );
+            return channel.ack(msg);
+          }
+          if (bodyData.fullName && bodyData.username) {
+            await new CommunityService().updateMany(
+              { poster_id: id },
+              {
+                poster_username: bodyData.username,
+                poster_fullname: bodyData.fullName,
+              }
+            );
+            await new PostDetailsService().updateMany(
+              { poster_id: id },
+              {
+                poster_username: bodyData.username,
+                poster_fullname: bodyData.fullName,
+              }
+            );
+            return channel.ack(msg);
+          }
         }
       } catch (error) {
         console.error(`Error while updating post details: ${error}`);
         return channel.ack(msg);
       }
     }
-    process.on('exit', (code) => {
+    process.on("exit", (code) => {
       channel.close();
       console.log(`Closing ${channel} channel`);
-   });
+    });
     // return null;
   }
 );

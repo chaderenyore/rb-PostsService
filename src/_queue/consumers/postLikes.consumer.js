@@ -22,6 +22,31 @@ const PostsLikesConsumer = new Connnection(
           );
 
           return channel.ack(msg);
+        } else {
+          if (bodyData.fullName && bodyData.user_username) {
+            const updatedrecords = await new PostsLiksService().updateMany(
+              { user_id: id },
+              {
+                fullname: bodyData.fullName,
+                username: bodyData.username,
+              }
+            );
+            return channel.ack(msg);
+          }
+          if (bodyData.fullName) {
+            const updatedrecords = await new PostsLiksService().updateMany(
+              { user_id: id },
+              { fullname: bodyData.fullName }
+            );
+            return channel.ack(msg);
+          }
+          if (bodyData.username) {
+            const updatedrecords = await new PostsLiksService().updateMany(
+              { user_id: id },
+              { username: bodyData.username }
+            );
+            return channel.ack(msg);
+          }
         }
       } catch (error) {
         console.error(`Error while updating post likes details: ${error}`);
