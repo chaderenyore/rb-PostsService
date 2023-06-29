@@ -36,6 +36,10 @@ class PostsService {
   async updateMany(condition, update) {
     return this.PostsRepository.updateMany(condition, update);
   }
+
+  async countDocuments(condition = {}) {
+    return this.PostsRepository.count();
+  }
 }
 
 module.exports = PostsService;
