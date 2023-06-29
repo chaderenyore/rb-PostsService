@@ -15,6 +15,8 @@ const AllReportedPostsController = require("../controllers/getAllReportedPosts")
 const AllBinController = require("../controllers/getAllRecycleBin");
 const DeletePostsController = require("../controllers/deletePosts");
 const ClearBinController = require("../controllers/clearRecycleBin");
+const TotalNumberOfPostsController = require("../controllers/fetchNumberofPosts");
+
 
 const router = Router();
 
@@ -71,4 +73,9 @@ router.delete(
   ClearBinController.clearBinPosts
 );
 
+router.get(
+  "/numberof-posts",
+  authorizeAdmin(["super", "admin", "moderator", "account-view", "account-edit"]),
+  TotalNumberOfPostsController.fetchNumberOfPosts
+);
 module.exports = router;

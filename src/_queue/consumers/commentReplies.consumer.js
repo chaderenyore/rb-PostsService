@@ -23,15 +23,42 @@ const CommentRepliesConsumer = new Connnection(
             );
           return channel.ack(msg);
         }
+        if (bodyData.fullName && bodyData.username) {
+          const updatedrecords =
+            await new CommentRepliesServiceService().updateMany(
+              { user_id: id },
+              {
+                user_fullname: bodyData.fullName,
+                user_username: bodyData.username,
+              }
+            );
+          return channel.ack(msg);
+        }
+        if (bodyData.fullName && !bodyData.username) {
+          const updatedrecords =
+            await new CommentRepliesServiceService().updateMany(
+              { user_id: id },
+              {  user_fullname: bodyData.fullName }
+            );
+          return channel.ack(msg);
+        }
+        if (bodyData.username && !bodyData.fullName) {
+          const updatedrecords =
+            await new CommentRepliesServiceService().updateMany(
+              { user_id: id },
+              { user_username: bodyData.username }
+            );
+          return channel.ack(msg);
+        }
       } catch (error) {
         console.error(`Error while updating post comment replies: ${error}`);
         return channel.ack(msg);
       }
     }
-    process.on('exit', (code) => {
+    process.on("exit", (code) => {
       channel.close();
       console.log(`Closing ${channel} channel`);
-   });
+    });
     // return null;
   }
 );
