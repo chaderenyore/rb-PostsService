@@ -31,8 +31,9 @@ exports.getAllCommunityPostPosts = async (req, res, next) => {
       );
     } else {
     // get users blocked posts ids
-    const usersBlockedPosts = await new BlockedPostsService().getAll({blocker_id: req.user.user_id});
-
+    if(req.user && req.user.user_id){
+      const usersBlockedPosts = await new BlockedPostsService().getAll({blocker_id: req.user.user_id});
+      
     for(let i = 0; i < usersBlockedPosts.data.length; i++){
       usersBlockedPostsIds.push(usersBlockedPosts.data[i].post_id)
     }
@@ -42,6 +43,8 @@ exports.getAllCommunityPostPosts = async (req, res, next) => {
       allPosts.push(posts.data[post]);
     }
   }
+    }
+
   for(let post = 0; post < allPosts.length; post++){
     if(allPosts[post].post_type === "original"){
       filterPosts.push(allPosts[post]);
