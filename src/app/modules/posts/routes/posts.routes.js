@@ -124,7 +124,7 @@ router.post(
 
 router.get(
   "/community-posts",
-  authorize(["user", "org"]),
+  // authorize(["user", "org"]),
   validateRequest(CommunityPosts.getCommunityPostsQuerySchema, "query"),
   CommunityPostsController.getAllCommunityPostPosts
 );
@@ -175,7 +175,6 @@ router.post(
 
 router.get(
   "/filterbycoin",
-  authorize(["user", "org"]),
   validateRequest(FilterPostsByCoinMention.searchByCoinMentionQuerySchema, "query"),
   FilterPostsByCoinController.searchPostsByCoinMention
 );
@@ -189,7 +188,6 @@ router.get(
 
 router.get(
   "/communityglobalsearch",
-  authorize(["user", "org"]),
   validateRequest(GlobalSearchPosts.globalQuerySchema, "query"),
   GlobalSearchPostsController.globalSearchCommunityPosts
 );
