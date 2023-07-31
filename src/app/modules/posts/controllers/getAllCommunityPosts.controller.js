@@ -15,6 +15,7 @@ exports.getAllCommunityPostPosts = async (req, res, next) => {
     let allPosts = [];
     let filterPosts = [];
     let usersBlockedPostsIds = [];
+    let usersBlockedPosts;
     // search for posts
     const posts = await new CommunityPostsService().getAll(req.query.limit, req.query.page, {});
     if (posts.data.length === 0) {
@@ -32,7 +33,7 @@ exports.getAllCommunityPostPosts = async (req, res, next) => {
     } else {
     // get users blocked posts ids
     if(req.user && req.user.user_id){
-      const usersBlockedPosts = await new BlockedPostsService().getAll({blocker_id: req.user.user_id});
+       usersBlockedPosts = await new BlockedPostsService().getAll({blocker_id: req.user.user_id});
       
     for(let i = 0; i < usersBlockedPosts.data.length; i++){
       usersBlockedPostsIds.push(usersBlockedPosts.data[i].post_id)
@@ -65,7 +66,8 @@ exports.getAllCommunityPostPosts = async (req, res, next) => {
   data.filterPosts = filterPosts;
   data.pagination = posts.pagination;
   // reduce data total count by number of blocked posts removed
-  data.pagination.totalCount = Number(posts.pagination.totalCount) - Number(usersBlockedPosts.pagination.totalCount);
+  let userBlockedPostPagination = usersBlockedPosts ? Number(usersBlockedPosts.pagination.totalCount) : 0;
+  data.pagination.totalCount = Number(posts.pagination.totalCount) - Number(userBlockedPostPagination);
       return createResponse("Community Posts Retrieved", data)(res, HTTP.OK);
     }
   } catch (err) {
