@@ -1,5 +1,7 @@
 const { Router } = require("express");
 const { authorize } = require("../../../middlewares/authorizeUser");
+const { customAuth } = require("../../../middlewares/customAuth");
+
 const { authorizeAdmin } = require("../../../middlewares/authorizeAdmin");
 const validateRequest = require("../../../middlewares/vallidate");
 
@@ -124,7 +126,7 @@ router.post(
 
 router.get(
   "/community-posts",
-  // authorize(["user", "org"]),
+  customAuth(["user", "org"]),
   validateRequest(CommunityPosts.getCommunityPostsQuerySchema, "query"),
   CommunityPostsController.getAllCommunityPostPosts
 );
