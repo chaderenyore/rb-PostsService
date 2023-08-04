@@ -50,14 +50,12 @@ router.post(
 
 router.get(
   '/reply/all',
-  authorize(['user','org']),
   validateRequest(AllCommentReplies.getAllRepliesQuerySchema, "query"),
   AllCommentRepliesController.getAllCommentReplies
 );
 
 router.get(
   '/post-comments/all',
-  authorize(['user','org']),
   validateRequest(AllPosComments.getAllPostCommentQuerySchema, "query"),
   AllPostCommentsController.getAllPostComments
 );
