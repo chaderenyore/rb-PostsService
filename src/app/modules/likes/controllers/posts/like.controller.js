@@ -66,7 +66,7 @@ exports.likeAPost = async (req, res, next) => {
             const Like = await new PostLikeService().createRecord(dataToLikeModel);
             // increment like count on post
             const updatedCommunityPost = await new CommunityService().update(
-              { community_id: req.query.community_id },
+              { _id: req.query.community_id },
               { $inc: { 'total_likes': 1 } }
             );
     
