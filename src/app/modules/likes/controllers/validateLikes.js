@@ -19,7 +19,7 @@ exports.validateLike = async (req, res, next) => {
       user_id: req.user.user_id,
     });
     console.log("COMMENT LIKE ==== ", commentLikeExist);
-    if (!postLikeExist) {
+    if (req.query.community_id && !postLikeExist) {
       return next(
         createError(HTTP.OK, [
           {
@@ -32,7 +32,7 @@ exports.validateLike = async (req, res, next) => {
         ])
       );
     } 
-    if (!commentLikeExist) {
+    if (req.query.comment_id && !commentLikeExist) {
       return next(
         createError(HTTP.OK, [
           {
