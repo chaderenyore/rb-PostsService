@@ -19,7 +19,7 @@ exports.validateLike = async (req, res, next) => {
       user_id: req.user.user_id,
     });
     console.log("COMMENT LIKE ==== ", commentLikeExist);
-    if (!postLikeExist || !commentLikeExist) {
+    if (!postLikeExist) {
       return next(
         createError(HTTP.OK, [
           {
@@ -31,9 +31,22 @@ exports.validateLike = async (req, res, next) => {
           },
         ])
       );
-    } else {
+    } 
+    if (!commentLikeExist) {
+      return next(
+        createError(HTTP.OK, [
+          {
+            status: RESPONSE.SUCCESS,
+            message: "Liked Invalid",
+            statusCode: HTTP.OK,
+            data: null,
+            code: HTTP.OK,
+          },
+        ])
+      );
+    } 
       return createResponse("Liked Valid", {})(res, HTTP.OK);
-    }
+    
   } catch (err) {
     logger.error(err);
     return next(createError.InternalServerError(err));
