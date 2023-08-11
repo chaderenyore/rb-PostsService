@@ -19,7 +19,7 @@ exports.validateLike = async (req, res, next) => {
       user_id: req.user.user_id,
     });
     console.log("COMMENT LIKE ==== ", commentLikeExist);
-    if (!postLikeExist || !postLikeExist) {
+    if (!postLikeExist || !commentLikeExist) {
       return next(
         createError(HTTP.OK, [
           {
