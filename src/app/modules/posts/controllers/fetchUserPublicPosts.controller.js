@@ -14,6 +14,7 @@ exports.fetchUsersPublicPosts = async (req, res, next) => {
     let allPosts = [];
     let filterPosts = [];
     let usersBlockedPostsIds = [];
+    let usersBlockedPosts;
     // search for posts
     const posts = await new PostsService().getAll(req.query.limit, req.query.page, {poster_id: req.query.user_id});
     if (posts && posts.data.length === 0) {
@@ -30,8 +31,9 @@ exports.fetchUsersPublicPosts = async (req, res, next) => {
       );
     } else {
     // get users blocked posts ids
-    const usersBlockedPosts = await new BlockedPostsService().getAll({blocker_id: req.user.user_id});
-
+      if(req.user) {
+usersBlockedPosts = await new BlockedPostsService().getAll({blocker_id: req.user.user_id});
+      }
     for(let i = 0; i < usersBlockedPosts.data.length; i++){
       usersBlockedPostsIds.push(usersBlockedPosts.data[i].post_id)
     }
