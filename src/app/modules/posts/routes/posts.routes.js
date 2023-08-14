@@ -183,7 +183,7 @@ router.get(
 
 router.get(
   "/user/public",
-  authorize(["user", "org"]),
+  customAuth(["user", "org"]),
   validateRequest(FetchUsersPublicPosts.getCommunityPostsQuerySchema, "query"),
   FetchUsersPublicPostsController.fetchUsersPublicPosts
 );
