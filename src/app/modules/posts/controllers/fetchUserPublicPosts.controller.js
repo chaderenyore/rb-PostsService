@@ -32,11 +32,11 @@ exports.fetchUsersPublicPosts = async (req, res, next) => {
     } else {
     // get users blocked posts ids
       if(req.user) {
-usersBlockedPosts = await new BlockedPostsService().getAll({blocker_id: req.user.user_id});
-      }
-    for(let i = 0; i < usersBlockedPosts.data.length; i++){
+   usersBlockedPosts = await new BlockedPostsService().getAll({blocker_id: req.user.user_id});
+        for(let i = 0; i < usersBlockedPosts.data.length; i++){
       usersBlockedPostsIds.push(usersBlockedPosts.data[i].post_id)
-    }
+        }
+      }
   //  loop through data and find the one that has children
   for(let post = 0; post < posts.data.length; post++){
     if(!usersBlockedPostsIds.includes(posts.data[post].original_post_id)){
