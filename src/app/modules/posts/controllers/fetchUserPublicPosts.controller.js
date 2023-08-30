@@ -59,6 +59,7 @@ exports.fetchUsersPublicPosts = async (req, res, next) => {
       }
     }
   }
+  console.log("POSTS : " , posts)
   // build data to return
   data.filterPosts = filterPosts;
   data.pagination = posts.data.pagination;
