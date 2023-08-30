@@ -63,7 +63,9 @@ exports.fetchUsersPublicPosts = async (req, res, next) => {
   data.filterPosts = filterPosts;
       console.log("DATA : ", data)
   data.pagination = posts.data.pagination;
-      console.log("DATA PAGINATION : ", data.pagination)
+      console.log("POSTS : ",posts)
+      console.log("POSTS DATA : ",posts.data)
+      console.log("POSTS PAGINATION : ",posts.data.pagination)
   // reduce data total count by number of blocked posts removed
   let userBlockedPostPagination = (usersBlockedPosts && usersBlockedPosts.length !== 0) ? Number(usersBlockedPosts.pagination.totalCount) : 0
   data.pagination.totalCount = Number(posts.data.pagination.totalCount) - Number(userBlockedPostPagination);
