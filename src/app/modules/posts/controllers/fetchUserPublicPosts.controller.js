@@ -66,7 +66,7 @@ exports.fetchUsersPublicPosts = async (req, res, next) => {
   data.pagination.totalCount = Number(posts.pagination.totalCount) - Number(usersBlockedPosts.pagination.totalCount);
       return createResponse("User Public Community Posts Retrieved", data)(res, HTTP.OK);
     }
-  } catch (err) 
+  } catch (err) {
     console.log("Error " , err)
     logger.error(err);
     return next(createError.InternalServerError(err));
