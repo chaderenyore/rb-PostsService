@@ -63,7 +63,8 @@ exports.fetchUsersPublicPosts = async (req, res, next) => {
   data.filterPosts = filterPosts;
   data.pagination = posts.data.pagination;
   // reduce data total count by number of blocked posts removed
-  data.pagination.totalCount = Number(posts.pagination.totalCount) - Number(usersBlockedPosts.pagination.totalCount);
+  let userBlockedPostPagination = usersBlockedPosts.length !== 0 ? Number(usersBlockedPosts.pagination.totalCount) : 0
+  data.pagination.totalCount = Number(posts.pagination.totalCount) - userBlockedPostPagination;
       return createResponse("User Public Community Posts Retrieved", data)(res, HTTP.OK);
     }
   } catch (err) {
