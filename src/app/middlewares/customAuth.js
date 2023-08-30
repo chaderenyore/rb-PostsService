@@ -11,7 +11,7 @@ exports.customAuth = (role = []) => {
       req.headers['authorization'] &&
       req.headers['authorization'].split(' ')[1];
     if (!token) {
-        next();
+        return next();
     }
     try {
       //   validate
